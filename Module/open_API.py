@@ -16,11 +16,6 @@ class MyWindow(QMainWindow):
         self.setGeometry(300, 300, 400, 600)
         self.kiwoom = QAxWidget("KHOPENAPI.KHOpenAPICtrl.1")
 
-        # 이벤트
-        # self.kiwoom.OnEven        tConnect.connect(self.event_connect)
-        # self.kiwoom.OnReceiveTrData.connect(self.reveive_trdata)
-
-
         # 기능 정리
         login_btn = QPushButton("Login", self)
         login_btn.move(20, 20)
@@ -42,13 +37,15 @@ class MyWindow(QMainWindow):
         test_btn2.move(20, 220)
         test_btn2.clicked.connect(self.minute_data)
 
-        # 테스트
+
+
+        # 기능 테스트
         test_btn2 = QPushButton('기능 테스트', self)
         test_btn2.move(20, 400)
         test_btn2.clicked.connect(self.test)
 
 
-        # 수신 이벤트?
+        # 데이터 수신 이벤트
         self.kiwoom.OnReceiveTrData.connect(self.receive_trdata)
 
 
