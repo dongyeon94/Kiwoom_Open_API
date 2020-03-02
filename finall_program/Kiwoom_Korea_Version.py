@@ -58,8 +58,11 @@ class MyWindow(QMainWindow):
 
         sale_order_btn = QPushButton('주식 매도' ,self)
         sale_order_btn.move(20,320)
-        sale_order_btn.click()
+        sale_order_btn.clicked.connect(self.stock_sale_order)
 
+        real_time_btn = QPushButton('주식 현재가',self)
+        real_time_btn.move(20,370)
+        real_time_btn.clicked.connect(self.real_data)
 
 
 
@@ -147,7 +150,18 @@ class MyWindow(QMainWindow):
 
 
 
-
+        # 실시간 정보
+    def realData(self, sJongmokCode, sRealType, sRealData):
+        if sRealType == "주식체결":
+            print('주식 체결 데이터')
+            current_data = self.kiwoom.GetCommRealData(sJongmokCode, 10)
+            # market_data = self.kiwoom.GetCommRealData(sJongmokCode, 16)
+            sale_time = self.kiwoom.GetCommRealData(sJongmokCode, 20)
+            print('현재가 : ', current_data)
+            # print('시가 : ' , market_data)
+            print('체결 시간 : ', sale_time)
+            print('등락 : ')
+            print('-' * 20)
 
 
 
@@ -161,12 +175,6 @@ class MyWindow(QMainWindow):
         pass
 
 
-    def tick_test(self):
-        self.kiwoom.SetInputValue('종목코드',COM_CODE)
-        res = self.kiwoom.CommRqData('종목정보요청','opt10001',0,'5010')
-        print(res)
-        time.sleep(3)
-        self.kiwoom.OnReceiveRealData.connect(self.realData)
 
 
         #
@@ -177,27 +185,31 @@ class MyWindow(QMainWindow):
         # print(data2)
 
 
+    # 주식 매수
     def stock_buy_order(self):
         # SendOrder(구분요청명 , 화면번호 , 계좌 번호, 주문 유형, 주식 코드, 주문 수량, 주문단가, 거래 구분, 주문번호)
         # 주문유형  : [ 1 신규 매수 / 2 신규 매도 / 3 매수 취소  / 4 매도 취소 / 5 매수정정 / 6 매도 정정 ]
         data = self.kiwoom.SendOrder('주식매수',"10011",'8130515111',1,COM_CODE,1,0,'03',"")
         print(data)
 
+    # 주식 매도
     def stock_sale_order(self):
         # SendOrder(구분요청명 , 화면번호 , 계좌 번호, 주문 유형, 주식 코드, 주문 수량, 주문단가, 거래 구분, 주문번호)
         # 주문유형  : [ 1 신규 매수 / 2 신규 매도 / 3 매수 취소  / 4 매도 취소 / 5 매수정정 / 6 매도 정정 ]
         data = self.kiwoom.SendOrder('주식매도',"10021",'8130515111',2,COM_CODE,5,0,'03',"")
         print(data)
 
-    # 실시간 정보
-    def realData(self, sJongmokCode, sRealType, sRealData):
-        if sRealType=="주식체결":
-            print('주식 체결 데이터')
-            current_data = self.kiwoom.GetCommRealData(sJongmokCode,10)
-            market_data = self.kiwoom.GetCommRealData(sJongmokCode, 16)
-            print('current_data : ',current_data)
-            print('market_data : ' , market_data)
 
+    # 실시간 데이터
+    def real_data(self):
+        self.kiwoom.SetInputValue('종목코드',COM_CODE)
+        res = self.kiwoom.CommRqData('종목정보요청','opt10001',0,'5010')
+        if res==0:
+            print('요청성공')
+        else:
+            print('요청 실패')
+        time.sleep(1)
+        self.kiwoom.OnReceiveRealData.connect(self.realData)
 
 
     # 주식 검색
