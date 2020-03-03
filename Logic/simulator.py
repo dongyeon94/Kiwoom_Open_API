@@ -9,6 +9,8 @@
 
 """
 head = None
+type_sell = 1
+type_buy = 2
 
 
 def run():
@@ -103,7 +105,8 @@ def run():
 # Node
 class Tran_DListNode:
 
-    def __init__(self, price, bongPlus, bongMinus, tickPlus, tickMinus, count):
+    def __init__(self, type, price, bongPlus, bongMinus, tickPlus, tickMinus, count):
+        self.type = type
         self.price = price
         self.bongPlus = bongPlus
         self.bongMinus = bongMinus
