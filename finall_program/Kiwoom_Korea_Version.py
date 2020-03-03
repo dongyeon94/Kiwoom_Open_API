@@ -83,10 +83,10 @@ class MyWindow(QMainWindow):
 
 
 
-        # 테스트
-        test_btn2 = QPushButton('기능 테스트', self)
-        test_btn2.move(20, 500)
-        test_btn2.clicked.connect(self.test)
+        # # 테스트
+        # test_btn2 = QPushButton('기능 테스트', self)
+        # test_btn2.move(20, 500)
+        # test_btn2.clicked.connect(self.test)
 
 
 
