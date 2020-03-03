@@ -1,121 +1,121 @@
-"""
- tickList =[2045, 2040, 2045, 2040, 2045, 2040, 2040, 2045, 2045, 2045, 2050, 2045, 2050, 2045, 2045, 2045, 2045, 2050, 2045,
-     2045, 2045, 2045, 2050, 2045, 2050, 2045, 2045, 2050, 2045, 2045, 2050, 2045, 2050, 2050, 2045, 2050, 2050, 2045,
-     2050, 2045, 2045, 2045, 2045, 2040, 2045, 2045, 2045, 2045, 2040, 2040, 2045, 2045, 2045, 2040, 2045, 2040, 2040,
-     2045, 2040, 2045, 2040, 2045, 2040, 2040, 2040, 2040, 2040, 2040, 2040, 2040, 2040, 2035, 2040, 2035, 2035, 2040,
-     2040, 2035, 2035, 2035, 2035, 2035, 2035, 2040, 2040, 2035, 2040, 2035]
 
-    bongList = [2035, 2045, 2050, 2050, 2055, 2060, 2055, 2055, 2050, 2050]
-
-"""
+#Head for Doubly LinkedList(매수한 선물 리스트)
 head = None
-type_sell = 1
-type_buy = 2
+
+#진입 타입
+type_sell = 1 #매수 진입
+type_buy = 2 #매도 진입
+
+#진입 판단 파라미터
+bongMinus = 0
+bongPlus = 0
+tickMinus = 0
+tickPlus = 0
+#마지막 가격. 첫 가격으로 자동으로 바뀜.
+lastPrice = 0
+
+# Hardcoded
+numBought = 10
 
 
-def run():
-    global head
-    # bongList = [600, 500, 400, 300, 400, 300, 200, 100]
-    # tickList = [600, 550, 500, 450, 400, 350, 300, 350, 400, 350, 300, 250, 200, 150, 100]
+def run(tickPrice, bongPrice, tickFlag, bongFlag):
+    global head, type_sell, type_buy, bongMinus, bongPlus, tickMinus, tickPlus, lastPrice
+    if tickPrice is None:
+        return
+    if lastPrice == 0:
+        lastPrice = tickPrice
+        return
 
-    #bong에 팔아야함 (tick으로 팔면 안됨)
-    bongList = [600, 500, 400, 300, 400, 500, 300, 200, 100]
-    tickList = [600, 550, 500, 450, 400, 350, 300, 350, 400, 450, 500, 350, 300, 250, 200, 150, 100]
-
-    # bongList = [600, 500, 500, 400, 300, 400, 300, 600, 700]
-    bongMinus = 0
-    bongPlus = 0
-    tickMinus = 0
-    tickPlus = 0
-    # HardCoded
-    numBought = 10
-    curr = None
-    prev = None
-    dest = len(tickList)
-    tickPrice = 0
-    tickCount = 0
-    bongPrice = 0
-    bongFlag = False
-    #tick과 Bong비율 default: 60초
-    #디버깅위해 2초로 설정
-    divideBy = 2
-    price = bongList[0]
-
-    while tickCount < dest:
-        tickPrice = tickList[tickCount]
-        if bongPrice != bongList[tickCount // divideBy]:
-            #Bong은 60번에 한번만 수행
-            bongPrice = bongList[tickCount // divideBy]
-            bongFlag = True
-
-        curr = head
-        while curr is not None:
-            tickSold = False
+    curr = head
+    while curr is not None:
+        tickSold = False
+        if tickFlag:
             if tickPrice > curr.price:
                 curr.tickPlus += 1
                 curr.tickMinus = 0
             elif tickPrice < curr.price:
                 curr.tickPlus = 0
                 curr.tickMinus += 1
-            #Option2: 3틱이상 올랐을때 매도
-            if curr.tickPlus >= 3:
-                print('(Tick)$' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(tickPrice) + '에 익절')
-                remove_elem(curr)
-                tickSold = True
-            #Option4: 6틱이상 하락했을때 매도
-            elif curr.tickMinus == 6:
-                print('(Tick)$' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(bongPrice) + '에 손절')
-                remove_elem(curr)
-                tickSold = True
-
-            if bongFlag and not tickSold:
-                if bongPrice > curr.price:
-                    curr.bongPlus += 1
-                    curr.bongMinus = 0
-                elif bongPrice < curr.price:
-                    curr.bongMinus += 1
-                    curr.bongPlus = 0
-                if curr.bongMinus == 1 and curr.bongCount == 1:
-                    # Option3: 진입 직후 마이너스 봉일때 바로 팜
-                    print('(Bong)$' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(bongPrice) + '에 손절')
+            if curr.type == type_buy:
+                # Option2: 매수거래가 3틱이상 올랐을때 매도
+                if curr.tickPlus >= 3:
+                    print('(Tick)매수 +익절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(tickPrice))
                     remove_elem(curr)
-                curr.bongCount += 1
-            prev = curr
-            curr = curr.next
+                    tickSold = True
+                # Option4: 매수거래가 6틱이상 하락했을때 매도
+                elif curr.tickMinus == 6:
+                    print('(Tick)매수 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(bongPrice))
+                    remove_elem(curr)
+                    tickSold = True
+            else:
+                # Option2_reverse: 매도거래가 3틱이상 내렸을 때 매도
+                if curr.tickMinus >= 3:
+                    print('(Tick)매도 +익절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(tickPrice))
+                    remove_elem(curr)
+                    tickSold = True
+                # Option4_reverse: 매도거래가 6틱이상 상승했을때 매도
+                elif curr.tickPlus == 6:
+                    print('(Tick)매도 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(bongPrice))
+                    remove_elem(curr)
+                    tickSold = True
+        if bongFlag and bongPrice is not None and not tickSold:
+            if bongPrice > curr.price:
+                curr.bongPlus += 1
+                curr.bongMinus = 0
+            elif bongPrice < curr.price:
+                curr.bongMinus += 1
+                curr.bongPlus = 0
+            if curr.type == type_buy:
+                if curr.bongMinus == 1 and curr.bongCount == 1:
+                # Option3: 매수진입 직후 마이너스 봉일때 바로 팜
+                    print('(Bong)매도 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(bongPrice))
+                    remove_elem(curr)
+            else:
+                if curr.bongPlus == 1 and curr.bongCount == 1:
+                # Option3_reverse: 매도진입 직후 플러스 봉일때 바로 팜
+                    print('(Bong)매도 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(bongPrice))
+                    remove_elem(curr)
+            curr.bongCount += 1
 
-        if bongFlag:
-            if bongMinus >= 3:
-                if bongPrice > price:
-                    #진입: bong 3번 오르면 삼
-                    print('(Bong)진입: ' + str(bongPrice))
-                    ll_append(Tran_DListNode(bongPrice, 0, 0, 0, 0, numBought))
+        curr = curr.next
 
-            if bongPrice > price:
-                bongPlus += 1
-                bongMinus = 0
+    if bongFlag and bongPrice is not None:
+        if bongMinus >= 3:
+            if bongPrice > lastPrice:
+                # 매수진입: bong 3번 내려갔다가 한번 오르면 삼
+                print('(Bong)매수 진입: $' + str(bongPrice) + '에 ' + str(numBought) + '개')
+                ll_append(Transaction(type_buy, bongPrice, numBought))
+        elif bongPlus >= 3:
+            if bongPrice < lastPrice:
+                # 매도진입: bong 3번 올랐다가 한번 내리면 삼
+                print('(Bong)매도 진입: $' + str(bongPrice) + '에 ' + str(numBought) + '개')
+                ll_append(Transaction(type_sell, bongPrice, numBought))
 
-            elif bongPrice < price:
-                bongMinus += 1
-                bongPlus = 0
-            price = bongPrice
+        if bongPrice > lastPrice:
+            bongPlus += 1
+            bongMinus = 0
 
-        tickCount += 1
+        elif bongPrice < lastPrice:
+            bongMinus += 1
+            bongPlus = 0
+        lastPrice = bongPrice
 
 
-# Node
-class Tran_DListNode:
-
-    def __init__(self, type, price, bongPlus, bongMinus, tickPlus, tickMinus, count):
-        self.type = type
-        self.price = price
-        self.bongPlus = bongPlus
-        self.bongMinus = bongMinus
-        self.tickPlus = tickPlus
-        self.tickMinus = tickMinus
+# Transaction: Node
+class Transaction:
+    def __init__(self, typeIn, priceIn, count):
+        self.type = typeIn
+        self.price = priceIn
         self.count = count
+        #초기 세팅
+        self.bongPlus = 0
+        self.bongMinus = 0
+        self.tickPlus = 0
+        self.tickMinus = 0
+        self.bongCount = 0
+        #Doubly Linked List라서 prev & next 존재
         self.prev = None
         self.next = None
-        self.bongCount = 0
 
 
 # LinkedList 영역
@@ -153,4 +153,16 @@ def remove_elem(node):
 
 
 if __name__ == "__main__":
-    run()
+    # bong에 팔아야함 (tick으로 팔면 안됨)
+    # bongList = [600, 500, 400, 300, 400, 500, 300, 200, 100]
+    # tickList = [600, 550, 500, 450, 400, 350, 300, 350, 400, 450, 500, 350, 300, 250, 200, 150, 100]
+    bongList = [600, 500, 400, 300, 400, 500, 300, 200, 100, 400, 500, 600, 700, 400, 500, 300, 200, 100]
+    tickList = [600, 550, 500, 450, 400, 350, 300, 350, 400, 450, 500, 350, 300, 250, 200, 150, 100, 400, 450, 500, 550, 600, 650, 700, 500, 400, 450, 500, 350, 300, 250, 200, 150, 100]
+    tickCount = 0
+    while tickCount < len(tickList):
+        tp = tickList[tickCount]
+        bp = None
+        if tickCount % 2 == 0:
+            bp = bongList[tickCount // 2]
+        run(tp, bp, True, True)
+        tickCount += 1
