@@ -52,6 +52,7 @@ class MyWindow(QMainWindow):
 
     # 실시간 체결 정보 수신 데이터
     def realData(self, sJongmokCode, sRealType, sRealData):
+        print("요청중")
         if sRealType == "주식체결":
             print('주식 체결 데이터')
             current_data = self.kiwoom.GetCommRealData(sJongmokCode, 10)
@@ -76,6 +77,7 @@ class MyWindow(QMainWindow):
             print('요청 실패')
         time.sleep(1)
         self.kiwoom.OnReceiveRealData.connect(self.realData)
+
 
 
 
@@ -115,7 +117,7 @@ class MyWindow(QMainWindow):
         print('방화벽 설정여부  :',info_firew_secgb,'  [0:미설정 / 1:설정 / 2:해지]')
         print('---------------------------------')
 
-    def receive_trdata(self, sScrNo, sRQName, sTrCode, sRecordName, sPreNext, nDataLength, sErrorCode, sMessage, sSplmMsg):
+    def receive_trdata(self, sScrNo, sRQName, sTrCode, sRecordName, sPreNext):
         print(sRQName)
         if sRQName == "주가조회":
             print('주가조회')
@@ -126,12 +128,12 @@ class MyWindow(QMainWindow):
             print("------------------------------")
             # 가장최근에서 10 거래일 전까지 데이터 조회
             for dataIdx in range(10):
-                inputVal = ["일자", "거래량", "시가", "고가", "저가", "현재가"]
+                inputVal = ["체결시간n", "현재가n", "시가", "고가", "저가", "거래량"]
                 outputVal = ['', '', '', '', '', '']
                 for idx, j in enumerate(inputVal):
                     outputVal[idx] = self.kiwoom.GetCommData(sTrCode, sRQName, dataIdx, j)
                 for idx, output in enumerate(outputVal):
-                    print(inputVal[idx] + output)
+                    print(inputVal[idx] +' : '+ output)
                 print('----------------')
 
         if sRQName == "분봉정보":
@@ -143,12 +145,12 @@ class MyWindow(QMainWindow):
             print("------------------------------")
             # 가장최근에서 10 거래일 전까지 데이터 조회
             for dataIdx in range(10):
-                inputVal = ["일자", "체결시간", "시가", "고가", "저가", "현재가"]
+                inputVal = ["체결시간n", "현재가n","등락율n", "시가n", "고가n", "저가n"]
                 outputVal = ['', '', '', '', '', '']
                 for idx, j in enumerate(inputVal):
                     outputVal[idx] = self.kiwoom.GetCommData(sTrCode ,sRQName, dataIdx, j)
                 for idx, output in enumerate(outputVal):
-                    print(inputVal[idx] + output)
+                    print(inputVal[idx] + ' : ' +output)
                 print('----------------')
 
     def test(self):
@@ -157,22 +159,19 @@ class MyWindow(QMainWindow):
 
 
     def suject_serach(self):
-
         self.kiwoom.SetInputValue("종목코드",COM_CODE)
-        # self.kiwoom.SetInputValue("기준일자", COM_DATE)
-        #self.kiwoom.SetInputValue("수정주가구분", "0")
         res = self.kiwoom.CommRqData("주가조회", "opt10001", "0", "opt10001")
         print(res)
 
 
     def minute_data(self):
-
         self.kiwoom.SetInputValue("종목코드",COM_CODE)
-        self.kiwoom.SetInputValue("틱범위","1:1분")
-        self.kiwoom.SetInputValue("기준일자", datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
-        self.kiwoom.SetInputValue("수정주가구분","1")
+        self.kiwoom.SetInputValue("시간단위","1")
+        # self.kiwoom.SetInputValue("기준일자", datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
+        # self.kiwoom.SetInputValue("수정주가구분","1")
 
-        res = self.kiwoom.CommRqData("분봉정보","opt10080",0,datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
+        # res = self.kiwoom.CommRqData("분봉정보","opt10012","0",datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
+        res = self.kiwoom.CommRqData("분봉정보", "opt10012", "0", "opt10012")
         print(res)
         if res==0:
             print('조회 성공')
