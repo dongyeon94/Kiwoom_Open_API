@@ -2,19 +2,25 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QAxContainer import *
+from PyQt5.QtCore import pyqtSlot,QTimer
 import datetime
 import time
+import pandas as pd
 
-COM_CODE = "CLJ20"  # 삼성전자
+COM_CODE = "CLJ20"  # crude oil
 #COM_DATE = "20200219"  # 기준일자 600 거래일 전일 부터 현제까지 받아옴
 COM_DATE = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+
+minu = []
+tick = []
+
 
 class MyWindow(QMainWindow):
     def __init__(self):
         # 초기 setup 모듈 로딩 등
         super().__init__()
         self.setWindowTitle("PyStock")
-        self.setGeometry(300, 300, 400, 800)
+        self.setGeometry(300, 150, 400, 800)
         self.kiwoom = QAxWidget("KFOpenAPI.KFOpenAPICtrl.1")
 
         # 기능 정리
@@ -48,9 +54,9 @@ class MyWindow(QMainWindow):
 
 
         # 기능 테스트(테스트 용도로 사용)
-        test_btn2 = QPushButton('기능 테스트', self)
+        test_btn2 = QPushButton('데이터 로딩', self)
         test_btn2.move(20, 420)
-        test_btn2.clicked.connect(self.real_data)
+        test_btn2.clicked.connect(self.data_loading)
 
         test_btn3 = QPushButton('기능 테스트 정지', self)
         test_btn3.move(20, 470)
@@ -122,6 +128,26 @@ class MyWindow(QMainWindow):
 
 
 # ------ 데이터 수신 기능  start  -------
+    def data_loading(self):
+        print('데이터 로딩')
+        # 분봉 1분마다  start안에 숫자는 1/1000초  1분 = 60000
+        self.minute_data()
+        self.timer = QTimer(self)
+        self.timer.start(60000)
+        self.timer.timeout.connect(self.minute_data)
+
+        # 실시간 체결 데이터 로딩
+        self.kiwoom.SetInputValue('종목코드', COM_CODE)
+        self.kiwoom.SetInputValue('시간단위', "1")
+        res = self.kiwoom.CommRqData('해외선물시세', 'opt10011', "0", 'opt10011')
+        print(res)
+        if res == 0:
+            print('요청성공')
+        else:
+            print('요청 실패')
+
+        self.kiwoom.OnReceiveRealData.connect(self.realData)
+
 
     # 실시간 체결 정보 수신 데이터
     def realData(self, sJongmokCode, sRealType, sRealData):
@@ -130,6 +156,8 @@ class MyWindow(QMainWindow):
             current_data = self.kiwoom.GetCommRealData(sRealType, 10)
             # market_data = self.kiwoom.GetCommRealData(sJongmokCode, 16)
             sale_time = self.kiwoom.GetCommRealData(sRealType, 20)
+
+            tick.append(current_data)
             print('현재가 : ', current_data)
             # print('시가 : ' , market_data)
             print('체결 시간 : ', sale_time)
@@ -181,11 +209,12 @@ class MyWindow(QMainWindow):
             print("종목코드: " + code)
             print("------------------------------")
             # 가장최근에서 10 거래일 전까지 데이터 조회
-            for dataIdx in range(10):
+            for dataIdx in range(1):
                 inputVal = ["체결시간n", "현재가n", "등락율n", "시가n", "고가n", "저가n"]
                 outputVal = ['', '', '', '', '', '']
                 for idx, j in enumerate(inputVal):
                     outputVal[idx] = self.kiwoom.GetCommData(sTrCode, sRQName, dataIdx, j)
+                minu.append(outputVal)
                 for idx, output in enumerate(outputVal):
                     print(inputVal[idx] + ' : ' + output)
                 print('----------------')
@@ -264,3 +293,9 @@ if __name__ == "__main__":
     myWindow = MyWindow()
     myWindow.show()
     app.exec_()
+    # minu
+    # tick
+    data1 = pd.DataFrame(minu,index=None)
+    data2 = pd.DataFrame(tick, index=None)
+    data1.to_csv('분봉.csv',index=None)
+    data2.to_csv('틱.csv',index=None)
