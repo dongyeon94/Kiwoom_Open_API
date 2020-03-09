@@ -2,7 +2,10 @@
 
 # 개발 환경
   - Pycharm
-  - Anaconda python 32bit
-  - python 32bit
+  - Anaconda 
+# Set Library
   - 키움 open api w 모듈
   - 키움 open api 모듈
+  - Python 32bit
+  - PyQt5
+ 
