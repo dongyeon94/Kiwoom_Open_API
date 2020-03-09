@@ -93,8 +93,16 @@ class MyWindow(QMainWindow):
 
 
     def test(self):
-        data = self.kiwoom.SendOrder('주식매수', "10211", '7009039772', 2, COM_CODE,1,"0", "", "1","")
-        print(data)
+        #                             구분 , 화면번호 , 계좌 , 주문유형 ,종목코드, 가격, stop가격, 거래구분, 주문번호
+
+        # data = self.kiwoom.SendOrder('주식매수', "10211", '7009039772', 1, COM_CODE,1,"40.00", "", "2","")
+        # print(data)
+        self.kiwoom.SetInputValue('계좌번호', "7009039772")
+        self.kiwoom.SetInputValue("비밀번호", "0000")
+        self.kiwoom.SetInputValue('비밀번호입력매체', "00")  # 무조건 00
+        self.kiwoom.SetInputValue('종목코드', COM_CODE)
+        res = self.kiwoom.CommRqData("미체결", "opw30001", "", "opw30001")
+
         # self.stock_buy_order()
 
     def run(self,tickPrice, bongPrice, tickFlag, bongFlag):
@@ -226,7 +234,11 @@ class MyWindow(QMainWindow):
     # 주식 매도
     def stock_sale_order(self):
         print('매도중')
+        data = self.kiwoom.SendOrder('주식매수', "10211", '7009039772', 2, COM_CODE, 1, "0", "", "1", "")
+        print(data)
 
+
+        # self.stock_buy_order()
         self.kiwoom.SetInputValue('계좌번호', "7009039772")
         self.kiwoom.SetInputValue("비밀번호", "0000")
         self.kiwoom.SetInputValue('비밀번호입력매체', "00")  # 무조건 00
@@ -309,6 +321,11 @@ class MyWindow(QMainWindow):
     # 데이터 수신중
     def receive_trdata(self, sScrNo, sRQName, sTrCode, sRecordName, sPreNext):
         # print(sRQName)
+        if sRQName=="미체결":
+            dataCount2 = self.kiwoom.GetChejanData(9203)
+            print(dataCount2)
+
+
         if sRQName == "주가조회":
             print('주가조회')
             dataCount = self.kiwoom.GetRepeatCnt(sTrCode, sRQName)
@@ -415,98 +432,6 @@ class MyWindow(QMainWindow):
 # ------ 유저 정보  end  -------
 
 
-#
-# def run(tickPrice, bongPrice, tickFlag, bongFlag):
-#     global head, type_sell, type_buy, bongMinus, bongPlus, tickMinus, tickPlus, lastPrice
-#     if tickPrice is None:
-#         return
-#     if lastPrice == 0:
-#         lastPrice = tickPrice
-#         return
-#
-#     curr = head
-#     while curr is not None:
-#         tickSold = False
-#         if tickFlag:
-#             if tickPrice > curr.price:
-#                 curr.tickPlus += 1
-#                 curr.tickMinus = 0
-#             elif tickPrice < curr.price:
-#                 curr.tickPlus = 0
-#                 curr.tickMinus += 1
-#             if curr.type == type_buy:
-#                 # Option2: 매수거래가 3틱이상 올랐을때 매도
-#                 if curr.tickPlus >= 3:
-#                     print('(Tick)매수 +익절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(tickPrice))
-#                     # MyWindow().stock_sale_order()
-#                     remove_elem(curr)
-#                     tickSold = True
-#                 # Option4: 매수거래가 6틱이상 하락했을때 매도
-#                 elif curr.tickMinus == 6:
-#                     print('(Tick)매수 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(bongPrice))
-#                     # MyWindow().stock_sale_order()
-#                     remove_elem(curr)
-#                     tickSold = True
-#             else:
-#                 # Option2_reverse: 매도거래가 3틱이상 내렸을 때 매도
-#                 if curr.tickMinus >= 3:
-#                     print('(Tick)매도 +익절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(tickPrice))
-#                     # MyWindow().stock_sale_order()
-#                     remove_elem(curr)
-#                     tickSold = True
-#                 # Option4_reverse: 매도거래가 6틱이상 상승했을때 매도
-#
-#                 elif curr.tickPlus == 6:
-#                     print('(Tick)매도 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(bongPrice))
-#                     # MyWindow().stock_sale_order()
-#                     remove_elem(curr)
-#                     tickSold = True
-#         if bongFlag and bongPrice is not None and not tickSold:
-#             if bongPrice > curr.price:
-#                 curr.bongPlus += 1
-#                 curr.bongMinus = 0
-#             elif bongPrice < curr.price:
-#                 curr.bongMinus += 1
-#                 curr.bongPlus = 0
-#             if curr.type == type_buy:
-#                 if curr.bongMinus == 1 and curr.bongCount == 1:
-#                 # Option3: 매수진입 직후 마이너스 봉일때 바로 팜
-#                     print('(Bong)매도 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(bongPrice))
-#                     # MyWindow().stock_sale_order()
-#                     remove_elem(curr)
-#             else:
-#                 if curr.bongPlus == 1 and curr.bongCount == 1:
-#                 # Option3_reverse: 매도진입 직후 플러스 봉일때 바로 팜
-#                     print('(Bong)매도 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(bongPrice))
-#                     # MyWindow().stock_sale_order()
-#                     remove_elem(curr)
-#             curr.bongCount += 1
-#
-#         curr = curr.next
-#
-#     if bongFlag and bongPrice is not None:
-#         if bongMinus >= 3:
-#             if bongPrice > lastPrice:
-#                 # 매수진입: bong 3번 내려갔다가 한번 오르면 삼
-#                 print('(Bong)매수 진입: $' + str(bongPrice) + '에 ' + str(numBought) + '개')
-#                 # MyWindow().stock_buy_order()
-#                 ll_append(Transaction(type_buy, bongPrice, numBought))
-#         elif bongPlus >= 3:
-#             if bongPrice < lastPrice:
-#                 # 매도진입: bong 3번 올랐다가 한번 내리면 삼
-#                 print('(Bong)매도 진입: $' + str(bongPrice) + '에 ' + str(numBought) + '개')
-#                 # MyWindow().stock_buy_order()
-#                 ll_append(Transaction(type_sell, bongPrice, numBought))
-#
-#         if bongPrice > lastPrice:
-#             bongPlus += 1
-#             bongMinus = 0
-#
-#         elif bongPrice < lastPrice:
-#             bongMinus += 1
-#             bongPlus = 0
-#         lastPrice = bongPrice
-
 
 # Transaction: Node
 class Transaction:
@@ -559,20 +484,6 @@ def remove_elem(node):
     return prev
 
 
-# if __name__ == "__main__":
-#     # bong에 팔아야함 (tick으로 팔면 안됨)
-#     # bongList = [600, 500, 400, 300, 400, 500, 300, 200, 100]
-#     # tickList = [600, 550, 500, 450, 400, 350, 300, 350, 400, 450, 500, 350, 300, 250, 200, 150, 100]
-#     bongList = [600, 500, 400, 300, 400, 500, 300, 200, 100, 400, 500, 600, 700, 400, 500, 300, 200, 100]
-#     tickList = [600, 550, 500, 450, 400, 350, 300, 350, 400, 450, 500, 350, 300, 250, 200, 150, 100, 400, 450, 500, 550, 600, 650, 700, 500, 400, 450, 500, 350, 300, 250, 200, 150, 100]
-#     tickCount = 0
-#     while tickCount < len(tickList):
-#         tp = tickList[tickCount]
-#         bp = None
-#         if tickCount % 2 == 0:
-#             bp = bongList[tickCount // 2]
-#         run(tp, bp, True, True)
-#         tickCount += 1
 
 
 
