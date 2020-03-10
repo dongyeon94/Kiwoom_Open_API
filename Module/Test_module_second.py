@@ -424,7 +424,7 @@ class MyWindow(QMainWindow):
                     outputVal[idx] = self.kiwoom.GetCommData(sTrCode, sRQName, dataIdx, j)
                 minu.append(outputVal)
                 # print(outputVal[1])
-                self.run(abs(float(str(current_data))), abs(float(str(outputVal[1]))), True, True)
+                self.run(abs(float(str(outputVal[1]))), abs(float(str(outputVal[1]))), True, True)
                 # self.run(current_data,outputVal[1],True,True)
                 # for idx, output in enumerate(outputVal):
                 #     print(inputVal[idx] + ' : ' + output)
