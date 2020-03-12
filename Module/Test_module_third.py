@@ -103,9 +103,9 @@ class MyWindow(QMainWindow):
         self.stock_sale_order(price=40.00)
         # self.stock_buy_order()
 
-    def run(self, tickPrice, bongPrice, tickFlag, bongFlag):
+    def run(self, tickPrice, bongPrice, tickFlag, bongFlag,time):
         global head, type_sell, type_buy, bongMinus, bongPlus, tickMinus, tickPlus, lastPrice
-        print('run test', tickPrice, bongPrice)
+        print('run test', tickPrice, bongPrice,'시간 : ', time)
         if tickPrice is None:
             return
         if lastPrice == 0:
@@ -242,11 +242,11 @@ class MyWindow(QMainWindow):
         print('매수중')
         #                             구분 , 화면번호 , 계좌 , 주문유형 ,종목코드, 개수,가격, stop가격, 거래구분, 주문번호
         if price==0:
-            data = self.kiwoom.SendOrder('주식매수', "1211", '7009039772', 2, COM_CODE, 1, str(price), "", "1", "")
+            data = self.kiwoom.SendOrder('주식매수', "1211", '7003305172', 2, COM_CODE, 1, str(price), "", "1", "")
         else:
-            data = self.kiwoom.SendOrder('주식매수', "1211", '7009039772', 2, COM_CODE, 1, str(price), "", "2", "")
+            data = self.kiwoom.SendOrder('주식매수', "1211", '7003305172', 2, COM_CODE, 1, str(price), "", "2", "")
         print(data)
-        # self.kiwoom.SetInputValue('계좌번호', "7009039772")
+        # self.kiwoom.SetInputValue('계좌번호', "7003305172")
         # self.kiwoom.SetInputValue("비밀번호", "0000")
         # self.kiwoom.SetInputValue('비밀번호입력매체', "00")  # 무조건 00
         # self.kiwoom.SetInputValue('종목코드', COM_CODE)
@@ -269,14 +269,14 @@ class MyWindow(QMainWindow):
         print('매도중')
         #                             구분 , 화면번호 , 계좌 , 주문유형 ,종목코드, 개수,가격, stop가격, 거래구분, 주문번호
         if price==0:
-            data = self.kiwoom.SendOrder('주식매도', "1212", '7009039772', 1, COM_CODE, 1, str(price), "", "1", "")
+            data = self.kiwoom.SendOrder('주식매도', "1212", '7003305172', 1, COM_CODE, 1, str(price), "", "1", "")
         else:
-            data = self.kiwoom.SendOrder('주식매도', "1212", '7009039772', 1, COM_CODE, 1, str(price), "", "2", "")
+            data = self.kiwoom.SendOrder('주식매도', "1212", '7003305172', 1, COM_CODE, 1, str(price), "", "2", "")
         print(data)
 
         #
         # # self.stock_buy_order()
-        # self.kiwoom.SetInputValue('계좌번호', "7009039772")
+        # self.kiwoom.SetInputValue('계좌번호', "7003305172")
         # self.kiwoom.SetInputValue("비밀번호", "0000")
         # self.kiwoom.SetInputValue('비밀번호입력매체', "00")  # 무조건 00
         # self.kiwoom.SetInputValue('종목코드', COM_CODE)
@@ -298,13 +298,13 @@ class MyWindow(QMainWindow):
     # 주식 매도 정정 취소
     def stock_sale_modify(self,code):
         #                             구분 , 화면번호 , 계좌 , 주문유형 ,종목코드, 개수,가격, stop가격, 거래구분, 주문번호
-        data = self.kiwoom.SendOrder('주식정정', "1213", '7009039772', 3, COM_CODE, 1, "0", "0", "2", str(code[6:]))
+        data = self.kiwoom.SendOrder('주식정정', "1213", '7003305172', 3, COM_CODE, 1, "0", "0", "2", str(code[6:]))
         print(data)
 
     # 주식 매수 정정 취소
     def stock_buy_modify(self,code):
         #                             구분 , 화면번호 , 계좌 , 주문유형 ,종목코드, 개수,가격, stop가격, 거래구분, 주문번호
-        data = self.kiwoom.SendOrder('주식정정', "1213", '7009039772', 4, COM_CODE, 1,"0", "0", "2", str(code[6:]))
+        data = self.kiwoom.SendOrder('주식정정', "1213", '7003305172', 4, COM_CODE, 1,"0", "0", "2", str(code[6:]))
         print(data)
 # ------ 주식 주문  end  -------
 
@@ -343,7 +343,7 @@ class MyWindow(QMainWindow):
 
             tick.append(current_data)
             # print(current_data,type(current_data))
-            self.run(abs(float(str(current_data))),None,True,True)
+            self.run(abs(float(str(current_data))),None,True,True,sale_time)
             # print('현재가 : ', current_data)
             # # print('시가 : ' , market_data)
             # print('체결 시간 : ', sale_time)
@@ -369,7 +369,7 @@ class MyWindow(QMainWindow):
 
     # 매도 미체결 취소 조회
     def stock_buy_wait(self):
-        self.kiwoom.SetInputValue('계좌번호', "7009039772")
+        self.kiwoom.SetInputValue('계좌번호', "7003305172")
         self.kiwoom.SetInputValue("비밀번호", "0000")
         self.kiwoom.SetInputValue('비밀번호입력매체', "00")  # 무조건 00
         self.kiwoom.SetInputValue('종목코드', COM_CODE)
@@ -379,7 +379,7 @@ class MyWindow(QMainWindow):
 
     # 매수 미체결 조회
     def stock_sale_wati(self):
-        self.kiwoom.SetInputValue('계좌번호', "7009039772")
+        self.kiwoom.SetInputValue('계좌번호', "7003305172")
         self.kiwoom.SetInputValue("비밀번호", "0000")
         self.kiwoom.SetInputValue('비밀번호입력매체', "00")  # 무조건 00
         self.kiwoom.SetInputValue('종목코드', COM_CODE)
@@ -438,7 +438,7 @@ class MyWindow(QMainWindow):
                     outputVal[idx] = self.kiwoom.GetCommData(sTrCode, sRQName, dataIdx, j)
                 minu.append(outputVal)
                 # print(outputVal[1])
-                self.run(abs(float(str(outputVal[1]))), abs(float(str(outputVal[1]))), True, True)
+                self.run(abs(float(str(outputVal[1]))), abs(float(str(outputVal[1]))), True, True,outputVal[0])
                 # self.run(current_data,outputVal[1],True,True)
                 # for idx, output in enumerate(outputVal):
                 #     print(inputVal[idx] + ' : ' + output)
