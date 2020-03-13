@@ -16,6 +16,8 @@ COM_DATE = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
 
 minu = []
 tick = []
+sale_time = None
+real_bong = None
 
 debugFlag = True
 log_file_t = None
@@ -32,7 +34,8 @@ type_buy = 2  # 매도 진입
 # 진입 판단 파라미터
 bongP = 0
 # 마지막 가격. 첫 가격으로 자동으로 바뀜.
-lastPrice = 0
+lastBongPrice = 0
+lastTickPrice = 0
 
 # Hardcoded
 numBought = 10
@@ -102,26 +105,27 @@ class MyWindow(QMainWindow):
         # self.stock_buy_order()
 
     def run(self, tickPrice, bongPrice, tickFlag, bongFlag, sale_time, debug_flag):
-        global head, type_sell, type_buy, bongP, lastPrice, log_file_b, log_file_t, log_file_tran
+        global head, type_sell, type_buy, bongP, lastBongPrice, lastTickPrice, log_file_b, log_file_t, log_file_tran
         print('run test', tickPrice, bongPrice, ', 시간 : ', sale_time)
         if tickPrice is None:
             return
-        if lastPrice == 0:
-            if bongFlag:
-                log_file_b.write('시간: ' + str(sale_time) + ' BongPrice: ' + ' ' + str(bongPrice) + ' BongP: ' + str(bongP) + '\n')
+        if lastTickPrice == 0:
+            lastTickPrice = tickPrice
             log_file_t.write('시간: ' + str(sale_time) + ' TickPrice: ' + str(tickPrice) + '\n')
-            log_file_b.flush()
             log_file_t.flush()
-            lastPrice = tickPrice
             return
+        if bongFlag and lastBongPrice == 0:
+            log_file_b.write('시간: ' + str(sale_time) + ' BongPrice: ' + ' ' + str(bongPrice) + ' BongP: ' + str(bongP) + '\n')
+            log_file_b.flush()
+            lastBongPrice = bongPrice
 
         curr = head
         while curr is not None:
             tickSold = False
             if tickFlag:
-                if tickPrice > lastPrice:
+                if tickPrice > lastTickPrice:
                     curr.tickP += 1
-                elif tickPrice < lastPrice:
+                elif tickPrice < lastTickPrice:
                     curr.tickP -= 1
                 if curr.type == type_buy:
                     # Option2: 매수거래가 3틱이상 올랐을때 매도
@@ -177,9 +181,9 @@ class MyWindow(QMainWindow):
                         # print('===')
                         tickSold = True
             if bongFlag and bongPrice is not None and not tickSold:
-                if bongPrice > lastPrice:
+                if bongPrice > lastBongPrice:
                     curr.bongP += 1
-                elif bongPrice < lastPrice:
+                elif bongPrice < lastBongPrice:
                     curr.bongP -= 1
                 if curr.type == type_buy:
                     if curr.bongP == -1 and curr.bongCount == 1:
@@ -209,7 +213,7 @@ class MyWindow(QMainWindow):
 
         if bongFlag and bongPrice is not None:
             if bongP <= -3:
-                if bongPrice > lastPrice:
+                if bongPrice > lastBongPrice:
                     # 매수진입: bong 3번 내려갔다가 한번 오르면 삼
                     print(type(bongPrice), str(bongPrice), '봉진입 사는거')
                     pri = round(bongPrice + 0.03, 2)
@@ -225,7 +229,7 @@ class MyWindow(QMainWindow):
                     print('=====')
                     ll_append(Transaction(type_buy, bongPrice, numBought))
             elif bongP >= 3:
-                if bongPrice < lastPrice:
+                if bongPrice < lastBongPrice:
                     # 매도진입: bong 3번 올랐다가 한번 내리면 삼
                     print(type(bongPrice), str(bongPrice), ' 봉진입 파는거')
                     pri = round(bongPrice - 0.03, 2)
@@ -239,20 +243,21 @@ class MyWindow(QMainWindow):
                     print('=====')
                     ll_append(Transaction(type_sell, bongPrice, numBought))
 
-            if bongPrice > lastPrice:
+            if bongPrice > lastBongPrice:
                 if bongP > 0:
                     bongP += 1
                 else:
                     bongP = 1
 
-            elif bongPrice < lastPrice:
+            elif bongPrice < lastBongPrice:
                 if bongP < 0:
                     bongP -= 1
                 else:
                     bongP = -1
-            lastPrice = bongPrice
+            lastBongPrice = bongPrice
         if bongFlag:
             log_file_b.write('시간: ' + str(sale_time) + ' BongPrice: ' + ' ' + str(bongPrice) + ' BongP: ' + str(bongP) + '\n')
+        lastTickPrice = tickPrice
         log_file_t.write('시간: ' + str(sale_time) + ' TickPrice: ' + str(tickPrice) + '\n')
         log_file_b.flush()
         log_file_t.flush()
@@ -360,16 +365,28 @@ class MyWindow(QMainWindow):
 
     # 실시간 체결 정보 수신 데이터
     def realData(self, sJongmokCode, sRealType, sRealData):
+        global sale_time, real_bong
         # print(sRealType)
         if sRealType == "해외선물시세":
             # print('주식 체결 데이터')
             current_data = self.kiwoom.GetCommRealData(sRealType, 10)
+            bong_price = None
+            bongFlag = False
             # market_data = self.kiwoom.GetCommRealData(sJongmokCode, 16)
-            sale_time = self.kiwoom.GetCommRealData(sRealType, 20)
+            tmp_time = int(self.kiwoom.GetCommRealData(sRealType, 20))
+            if sale_time is None:
+                sale_time = tmp_time
+            if tmp_time // 100 > sale_time // 100:
+                bong_price = real_bong
+                real_bong = abs(float(str(current_data)))
+                bongFlag = True
+            else:
+                real_bong = abs(float(str(current_data)))
+            sale_time = tmp_time
 
             tick.append(current_data)
             # print(current_data,type(current_data))
-            self.run(abs(float(str(current_data))), None, True, False, sale_time, debugFlag)
+            self.run(abs(float(str(current_data))), bong_price, True, bongFlag, str(sale_time), debugFlag)
             # print('현재가 : ', current_data)
             # # print('시가 : ' , market_data)
             # print('체결 시간 : ', sale_time)
@@ -470,7 +487,7 @@ class MyWindow(QMainWindow):
                     outputVal[idx] = self.kiwoom.GetCommData(sTrCode, sRQName, dataIdx, j)
                 minu.append(outputVal)
                 # print(outputVal[1])
-                self.run(abs(float(str(outputVal[1]))), abs(float(str(outputVal[1]))), True, True, outputVal[0], debugFlag)
+                #self.run(abs(float(str(outputVal[1]))), abs(float(str(outputVal[1]))), True, True, outputVal[0], debugFlag)
                 # self.run(current_data,outputVal[1],True,True)
                 # for idx, output in enumerate(outputVal):
                 #     print(inputVal[idx] + ' : ' + output)
