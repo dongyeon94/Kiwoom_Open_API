@@ -29,7 +29,7 @@ bongPlus = 0
 tickMinus = 0
 tickPlus = 0
 #마지막 가격. 첫 가격으로 자동으로 바뀜.
-lastPrice = 0
+lastBongPrice = 0
 
 # Hardcoded
 numBought = 10
@@ -96,7 +96,7 @@ class MyWindow(QMainWindow):
         self.stock_buy_order()
 
     def run(self,tickPrice, bongPrice, tickFlag, bongFlag):
-        global head, type_sell, type_buy, bongMinus, bongPlus, tickMinus, tickPlus, lastPrice
+        global head, type_sell, type_buy, bongMinus, bongPlus, tickMinus, tickPlus, lastBongPrice
         print('run test',tickPrice,bongPrice)
         if tickPrice is None:
             return
