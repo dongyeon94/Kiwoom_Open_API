@@ -17,7 +17,8 @@ COM_DATE = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
 minu = []
 tick = []
 sale_time = None
-real_bong = None
+bong_start = None
+bong_end = None
 
 debugFlag = True
 log_file_t = None
@@ -32,9 +33,9 @@ type_sell = 1  # 매수 진입
 type_buy = 2  # 매도 진입
 
 # 진입 판단 파라미터
-bongP = 0
+bongP = None
+bongPlus = None
 # 마지막 가격. 첫 가격으로 자동으로 바뀜.
-lastBongPrice = 0
 lastTickPrice = 0
 
 # Hardcoded
@@ -104,35 +105,31 @@ class MyWindow(QMainWindow):
         self.stock_sale_order(price=40.00)
         # self.stock_buy_order()
 
-    def run(self, tickPrice, bongPrice, tickFlag, bongFlag, sale_time, debug_flag):
-        global head, type_sell, type_buy, bongP, lastBongPrice, lastTickPrice, log_file_b, log_file_t, log_file_tran
-        print('run test', tickPrice, bongPrice, ', 시간 : ', sale_time)
-        if tickPrice is None:
+    def run(self, price, bongPlus, tickFlag, bongFlag, sale_time, debug_flag):
+        global head, type_sell, type_buy, bongP, lastTickPrice, log_file_b, log_file_t, log_file_tran
+        print('run test', price, ', 시간 : ', sale_time)
+        if price is None:
             return
         if lastTickPrice == 0:
-            lastTickPrice = tickPrice
-            log_file_t.write('시간: ' + str(sale_time) + ' TickPrice: ' + str(tickPrice) + '\n')
+            lastTickPrice = price
+            log_file_t.write('시간: ' + str(sale_time) + ' TickPrice: ' + str(price) + '\n')
             log_file_t.flush()
             return
-        if bongFlag and lastBongPrice == 0:
-            log_file_b.write('시간: ' + str(sale_time) + ' BongPrice: ' + ' ' + str(bongPrice) + ' BongP: ' + str(bongP) + '\n')
-            log_file_b.flush()
-            lastBongPrice = bongPrice
 
         curr = head
         while curr is not None:
             tickSold = False
             if tickFlag:
-                if tickPrice > lastTickPrice:
+                if price > lastTickPrice:
                     curr.tickP += 1
-                elif tickPrice < lastTickPrice:
+                elif price < lastTickPrice:
                     curr.tickP -= 1
                 if curr.type == type_buy:
                     # Option2: 매수거래가 3틱이상 올랐을때 매도
                     if curr.tickP == 3:
                         print('3틱 매수거래 상승 Option2')
-                        print('(Tick)매수 +익절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(tickPrice))
-                        log_file_tran.write(str(sale_time) + ' opt2_(Tick)매수 +익절 $' + str(curr.price) + '에 ' + str(curr.count) + '개를 $' + str(tickPrice) + '에\n')
+                        print('(Tick)매수 +익절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(price))
+                        log_file_tran.write(str(sale_time) + ' opt2_(Tick)매수 +익절 $' + str(curr.price) + '에 ' + str(curr.count) + '개를 $' + str(price) + '에\n')
                         # MyWindow().stock_sale_order()
                         # self.stock_buy_order()
                         # 익절은 예약에서 알아서 팔림
@@ -141,8 +138,8 @@ class MyWindow(QMainWindow):
                     # Option4: 매수거래가 6틱이상 하락했을때 매도
                     elif curr.tickP == -6:
                         print('a매수 6틱 하락 Option4')
-                        print('(Tick)매수 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(tickPrice))
-                        log_file_tran.write(str(sale_time) + ' opt4_(Tick)매수 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개를 $' + str(tickPrice) + '에\n')
+                        print('(Tick)매수 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(price))
+                        log_file_tran.write(str(sale_time) + ' opt4_(Tick)매수 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개를 $' + str(price) + '에\n')
                         # MyWindow().stock_sale_order()
                         # self.stock_sale_wati()
                         # time.sleep(1)
@@ -157,8 +154,8 @@ class MyWindow(QMainWindow):
                     # Option2_reverse: 매도거래가 3틱이상 내렸을 때 매도
                     if curr.tickP == -3:
                         print('매도 3틱 하락 Option2_reverse')
-                        print('(Tick)매도 +익절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(tickPrice))
-                        log_file_tran.write(str(sale_time) + ' opt2_r(Tick)매도 +익절 $' + str(curr.price) + '에 ' + str(curr.count) + '개를 $' + str(tickPrice) + '에\n')
+                        print('(Tick)매도 +익절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(price))
+                        log_file_tran.write(str(sale_time) + ' opt2_r(Tick)매도 +익절 $' + str(curr.price) + '에 ' + str(curr.count) + '개를 $' + str(price) + '에\n')
                         # MyWindow().stock_sale_order()
                         # self.stock_sale_order()
                         remove_elem(curr)
@@ -167,8 +164,8 @@ class MyWindow(QMainWindow):
                     # Option4_reverse: 매도거래가 6틱이상 상승했을때 매도
                     elif curr.tickP == 6:
                         print('매도 6틱 상승 Option4_reverse')
-                        print('(Tick)매도 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(tickPrice))
-                        log_file_tran.write(str(sale_time) + ' opt4_r(Tick)매도 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개를 $' + str(tickPrice) + '에\n')
+                        print('(Tick)매도 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(price))
+                        log_file_tran.write(str(sale_time) + ' opt4_r(Tick)매도 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개를 $' + str(price) + '에\n')
                         # MyWindow().stock_sale_order()
                         # self.stock_buy_wait()
                         # time.sleep(1)
@@ -180,17 +177,17 @@ class MyWindow(QMainWindow):
                         # self.stock_buy_order()
                         # print('===')
                         tickSold = True
-            if bongFlag and bongPrice is not None and not tickSold:
-                if bongPrice > lastBongPrice:
+            if bongFlag and not tickSold:
+                if bongPlus > 0:
                     curr.bongP += 1
-                elif bongPrice < lastBongPrice:
+                elif bongPlus < 0:
                     curr.bongP -= 1
                 if curr.type == type_buy:
                     if curr.bongP == -1 and curr.bongCount == 1:
                         # Option3: 매수진입 직후 마이너스 봉일때 바로 팜
                         print('매수진입후 마이너스 Option3')
-                        print('(Bong)매도 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(bongPrice))
-                        log_file_tran.write(str(sale_time) + ' opt3_(Bong)매도 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개를 $' + str(bongPrice) + '에\n')
+                        print('(Bong)매도 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(price))
+                        log_file_tran.write(str(sale_time) + ' opt3_(Bong)매도 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개를 $' + str(price) + '에\n')
                         # MyWindow().stock_sale_order()
                         self.stock_sale_wati()
                         # time.sleep(1)
@@ -200,8 +197,8 @@ class MyWindow(QMainWindow):
                     if curr.bongP == 1 and curr.bongCount == 1:
                         # Option3_reverse: 매도진입 직후 플러스 봉일때 바로 팜
                         print('option3 매도진입 플로스 Option3_reverse')
-                        print('(Bong)매도 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(bongPrice))
-                        log_file_tran.write(str(sale_time) + ' opt3_r(Bong)매도 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개를 $' + str(bongPrice) + '에\n')
+                        print('(Bong)매도 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개 $' + str(price))
+                        log_file_tran.write(str(sale_time) + ' opt3_r(Bong)매도 -손절 $' + str(curr.price) + '에 ' + str(curr.count) + '개를 $' + str(price) + '에\n')
                         # MyWindow().stock_sale_order()
                         self.stock_sale_wati()
                         # time.sleep(1)
@@ -211,54 +208,59 @@ class MyWindow(QMainWindow):
 
             curr = curr.next
 
-        if bongFlag and bongPrice is not None:
-            if bongP <= -3:
-                if bongPrice > lastBongPrice:
-                    # 매수진입: bong 3번 내려갔다가 한번 오르면 삼
-                    print(type(bongPrice), str(bongPrice), '봉진입 사는거')
-                    pri = round(bongPrice + 0.03, 2)
-                    # print('(Bong)매수 진입: $' + str(bongPrice) + '에 ' + str(numBought) + '개'+float(str(bongPrice))+0.03,'에 예약')
-                    print('(Bong)매수 진입: $' + str(bongPrice) + '에 ' + str(numBought) + '개  : ', pri, '에 예약')
-                    log_file_tran.write(str(sale_time) + ' (Bong)매수 진입: $' + str(bongPrice) + '에 ' + str(numBought) + '개  : '+ str(pri) + '에 예약\n')
-                    # MyWindow().stock_buy_order()
-                    self.stock_buy_order(bongPrice)
-
-                    time.sleep(1)
-                    print('예약중')
-                    self.stock_sale_order(pri)
-                    print('=====')
-                    ll_append(Transaction(type_buy, bongPrice, numBought))
-            elif bongP >= 3:
-                if bongPrice < lastBongPrice:
-                    # 매도진입: bong 3번 올랐다가 한번 내리면 삼
-                    print(type(bongPrice), str(bongPrice), ' 봉진입 파는거')
-                    pri = round(bongPrice - 0.03, 2)
-                    print('(Bong)매도 진입: $' + str(bongPrice) + '에 ' + str(numBought) + '개  : ', pri, '에 예약')
-                    log_file_tran.write(str(sale_time) + ' (Bong)매도 진입: $' + str(bongPrice) + '에 ' + str(numBought) + '개  : ' + str(pri) + '에 예약\n')
-                    # MyWindow().stock_buy_order()
-                    self.stock_sale_order(bongPrice)
-                    time.sleep(1)
-                    print('예약중')
-                    self.stock_buy_order(pri)
-                    print('=====')
-                    ll_append(Transaction(type_sell, bongPrice, numBought))
-
-            if bongPrice > lastBongPrice:
-                if bongP > 0:
-                    bongP += 1
-                else:
-                    bongP = 1
-
-            elif bongPrice < lastBongPrice:
-                if bongP < 0:
-                    bongP -= 1
-                else:
-                    bongP = -1
-            lastBongPrice = bongPrice
         if bongFlag:
-            log_file_b.write('시간: ' + str(sale_time) + ' BongPrice: ' + ' ' + str(bongPrice) + ' BongP: ' + str(bongP) + '\n')
-        lastTickPrice = tickPrice
-        log_file_t.write('시간: ' + str(sale_time) + ' TickPrice: ' + str(tickPrice) + '\n')
+            if bongP is None:
+                if bongPlus > 0:
+                    bongP = 1
+                elif bongPlus < 0:
+                    bongP = -1
+                else:
+                    bongP = 0
+            else:
+                if bongP <= -3:
+                    if bongPlus > 0:
+                        # 매수진입: bong 3번 내려갔다가 한번 오르면 삼
+                        print(type(price), str(price), '봉진입 사는거')
+                        pri = round(price + 0.03, 2)
+                        # print('(Bong)매수 진입: $' + str(tickPrice) + '에 ' + str(numBought) + '개'+float(str(tickPrice))+0.03,'에 예약')
+                        print('(Bong)매수 진입: $' + str(price) + '에 ' + str(numBought) + '개  : ', pri, '에 예약')
+                        log_file_tran.write(str(sale_time) + ' (Bong)매수 진입: $' + str(price) + '에 ' + str(numBought) + '개  : ' + str(pri) + '에 예약\n')
+                        # MyWindow().stock_buy_order()
+                        self.stock_buy_order()
+
+                        time.sleep(1)
+                        print('예약중')
+                        self.stock_sale_order(pri)
+                        print('=====')
+                        ll_append(Transaction(type_buy, price, numBought))
+                elif bongP >= 3:
+                    if bongPlus < 0:
+                        # 매도진입: bong 3번 올랐다가 한번 내리면 삼
+                        print(type(price), str(price), ' 봉진입 파는거')
+                        pri = round(price - 0.03, 2)
+                        print('(Bong)매도 진입: $' + str(price) + '에 ' + str(numBought) + '개  : ', pri, '에 예약')
+                        log_file_tran.write(str(sale_time) + ' (Bong)매도 진입: $' + str(price) + '에 ' + str(numBought) + '개  : ' + str(pri) + '에 예약\n')
+                        # MyWindow().stock_buy_order()
+                        self.stock_sale_order()
+                        time.sleep(1)
+                        print('예약중')
+                        self.stock_buy_order(pri)
+                        print('=====')
+                        ll_append(Transaction(type_sell, price, numBought))
+                if bongPlus > 0:
+                    if bongP > 0:
+                        bongP += 1
+                    else:
+                        bongP = 1
+
+                elif bongPlus < 0:
+                    if bongP < 0:
+                        bongP -= 1
+                    else:
+                        bongP = -1
+            log_file_b.write('시간: ' + str(sale_time) + ' Price: ' + ' ' + str(price) + ' BongP: ' + str(bongP) + ' BongPlus: ' + str(bongPlus) + '\n')
+        lastTickPrice = price
+        log_file_t.write('시간: ' + str(sale_time) + ' TickPrice: ' + str(price) + '\n')
         log_file_b.flush()
         log_file_t.flush()
         log_file_tran.flush()
@@ -365,28 +367,30 @@ class MyWindow(QMainWindow):
 
     # 실시간 체결 정보 수신 데이터
     def realData(self, sJongmokCode, sRealType, sRealData):
-        global sale_time, real_bong
+        global sale_time, bong_start, bong_end, bongPlus
         # print(sRealType)
         if sRealType == "해외선물시세":
             # print('주식 체결 데이터')
             current_data = self.kiwoom.GetCommRealData(sRealType, 10)
-            bong_price = None
             bongFlag = False
             # market_data = self.kiwoom.GetCommRealData(sJongmokCode, 16)
             tmp_time = int(self.kiwoom.GetCommRealData(sRealType, 20))
             if sale_time is None:
                 sale_time = tmp_time
             if tmp_time // 100 > sale_time // 100:
-                bong_price = real_bong
-                real_bong = abs(float(str(current_data)))
-                bongFlag = True
-            else:
-                real_bong = abs(float(str(current_data)))
-            sale_time = tmp_time
+                if bong_start is None:
+                    bong_start = abs(float(str(current_data)))
+                else:
+                    bong_end = abs(float(str(current_data)))
+                    bongPlus = bong_end - bong_start
+                    bong_start = bong_end
+                    bongFlag = True
+            if bongPlus is not None:
+                sale_time = tmp_time
+                tick.append(current_data)
+                self.run(abs(float(str(current_data))), bongPlus, True, bongFlag, str(sale_time), debugFlag)
 
-            tick.append(current_data)
             # print(current_data,type(current_data))
-            self.run(abs(float(str(current_data))), bong_price, True, bongFlag, str(sale_time), debugFlag)
             # print('현재가 : ', current_data)
             # # print('시가 : ' , market_data)
             # print('체결 시간 : ', sale_time)
