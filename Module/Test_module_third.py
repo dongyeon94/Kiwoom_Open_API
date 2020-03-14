@@ -444,20 +444,26 @@ class MyWindow(QMainWindow):
         if sRQName == "매도미체결":
             # dataCount = self.kiwoom.GetRepeatCnt(sTrCode, sRQName)
             # dataCount2 = self.kiwoom.GetChejanData(9203)
-            num = self.kiwoom.GetCommData(sTrCode, sRQName, 0, "주문번호")
-            # typ = self.kiwoom.GetCommData(sTrCode, sRQName, 0, "구븐")
-            print(num)
-            if int(num) > 0:
-                self.stock_buy_modify(num)
+            try:
+                num = self.kiwoom.GetCommData(sTrCode, sRQName, 0, "주문번호")
+                # typ = self.kiwoom.GetCommData(sTrCode, sRQName, 0, "구븐")
+                print(num)
+                if int(num) > 0:
+                    self.stock_buy_modify(num)
+            except:
+                print('매도 미체결 내역 없음')
 
         if sRQName == "매수미체결":
             # dataCount = self.kiwoom.GetRepeatCnt(sTrCode, sRQName)
             # dataCount2 = self.kiwoom.GetChejanData(9203)
-            num = self.kiwoom.GetCommData(sTrCode, sRQName, 0, "주문번호")
-            # typ = self.kiwoom.GetCommData(sTrCode, sRQName, 0, "구븐")
-            print(num)
-            if int(num) > 0:
-                self.stock_sale_modify(num)
+            try:
+                num = self.kiwoom.GetCommData(sTrCode, sRQName, 0, "주문번호")
+                # typ = self.kiwoom.GetCommData(sTrCode, sRQName, 0, "구븐")
+                print(num)
+                if int(num) > 0:
+                    self.stock_sale_modify(num)
+            except:
+                print('매수 미체결 내역 없음')
 
         if sRQName == "주가조회":
             print('주가조회')
