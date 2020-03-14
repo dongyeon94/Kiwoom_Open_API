@@ -221,7 +221,7 @@ class MyWindow(QMainWindow):
                     print('(Bong)매수 진입: $' + str(bongPrice) + '에 ' + str(numBought) + '개  : ', pri, '에 예약')
                     log_file_tran.write(str(sale_time) + ' (Bong)매수 진입: $' + str(bongPrice) + '에 ' + str(numBought) + '개  : '+ str(pri) + '에 예약\n')
                     # MyWindow().stock_buy_order()
-                    self.stock_buy_order()
+                    self.stock_buy_order(bongPrice)
 
                     time.sleep(1)
                     print('예약중')
@@ -236,7 +236,7 @@ class MyWindow(QMainWindow):
                     print('(Bong)매도 진입: $' + str(bongPrice) + '에 ' + str(numBought) + '개  : ', pri, '에 예약')
                     log_file_tran.write(str(sale_time) + ' (Bong)매도 진입: $' + str(bongPrice) + '에 ' + str(numBought) + '개  : ' + str(pri) + '에 예약\n')
                     # MyWindow().stock_buy_order()
-                    self.stock_sale_order()
+                    self.stock_sale_order(bongPrice)
                     time.sleep(1)
                     print('예약중')
                     self.stock_buy_order(pri)
@@ -438,29 +438,22 @@ class MyWindow(QMainWindow):
     def receive_trdata(self, sScrNo, sRQName, sTrCode, sRecordName, sPreNext):
         # print(sRQName)
         if sRQName == "매도미체결":
-            print('매도 미체결 조회')
             # dataCount = self.kiwoom.GetRepeatCnt(sTrCode, sRQName)
             # dataCount2 = self.kiwoom.GetChejanData(9203)
-            try:
-                num = self.kiwoom.GetCommData(sTrCode, sRQName, 0, "주문번호")
-                # typ = self.kiwoom.GetCommData(sTrCode, sRQName, 0, "구븐")
-                print(num)
-                if int(num) > 0:
-                    self.stock_buy_modify(num)
-            except:
-                print('미체결 내역 없음')
+            num = self.kiwoom.GetCommData(sTrCode, sRQName, 0, "주문번호")
+            # typ = self.kiwoom.GetCommData(sTrCode, sRQName, 0, "구븐")
+            print(num)
+            if int(num) > 0:
+                self.stock_buy_modify(num)
+
         if sRQName == "매수미체결":
-            print('매수 미체결 조회')
             # dataCount = self.kiwoom.GetRepeatCnt(sTrCode, sRQName)
             # dataCount2 = self.kiwoom.GetChejanData(9203)
-            try:
-                num = self.kiwoom.GetCommData(sTrCode, sRQName, 0, "주문번호")
-                # typ = self.kiwoom.GetCommData(sTrCode, sRQName, 0, "구븐")
-                print(num)
-                if int(num) > 0:
-                    self.stock_sale_modify(num)
-            except:
-                print(' 미체결 내역 없음')
+            num = self.kiwoom.GetCommData(sTrCode, sRQName, 0, "주문번호")
+            # typ = self.kiwoom.GetCommData(sTrCode, sRQName, 0, "구븐")
+            print(num)
+            if int(num) > 0:
+                self.stock_sale_modify(num)
 
         if sRQName == "주가조회":
             print('주가조회')
