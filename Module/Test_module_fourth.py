@@ -1,5 +1,5 @@
+
 import sys
-import math
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QAxContainer import *
@@ -122,7 +122,7 @@ class MyWindow(QMainWindow):
         # self.stock_sale_order(price=40.00)
         # self.stock_buy_order()
 
-    def run(self, price, bongPlus, tickFlag, bongFlag, sale_time, debug_flag):
+    def run(self, price, bongPlus, tickFlag, bongFlag, sale_time, option, debug_flag):
         global head, type_sell, type_buy, bongP, lastTickPrice, log_file_b, log_file_t, log_file_tran
         print('run test', price, ', 시간 : ', sale_time)
         if price is None:
@@ -234,7 +234,7 @@ class MyWindow(QMainWindow):
                 else:
                     bongP = 0
             else:
-                if bongP <= -3:
+                if option[0] == '1' and bongP <= -3:
                     if bongPlus > 0:
                         # 매수진입: bong 3번 내려갔다가 한번 오르면 삼
                         print(type(price), str(price), '봉진입 사는거')
@@ -250,7 +250,7 @@ class MyWindow(QMainWindow):
                         self.stock_sale_order(pri)
                         print('=====')
                         ll_append(Transaction(type_buy, price, numBought))
-                elif bongP >= 3:
+                elif option[1] == '1' and bongP >= 3:
                     if bongPlus < 0:
                         # 매도진입: bong 3번 올랐다가 한번 내리면 삼
                         print(type(price), str(price), ' 봉진입 파는거')
