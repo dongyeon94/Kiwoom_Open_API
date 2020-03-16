@@ -26,7 +26,7 @@ type_sell = 1  # 매수 진입
 type_buy = 2  # 매도 진입
 
 # 진입 판단 파라미터
-bongP = None
+bongP = 0
 bongPlus = None
 # 마지막 가격. 첫 가격으로 자동으로 바뀜.
 lastTickPrice = 0
@@ -118,7 +118,7 @@ class MyWindow(QMainWindow):
             return
         if lastTickPrice == 0:
             lastTickPrice = price
-            self.log_file.write(str(sale_time)+","+str(price)+","+str(bongP)+'\n')
+            self.log_file.write(str(sale_time)+','+ str(bongFlag) + ',' + str(price)+","+str(bongP)+'\n')
             self.log_file.flush()
             return
 
@@ -342,7 +342,7 @@ class MyWindow(QMainWindow):
                     bongFlag = True
             if bongPlus is not None:
                 sale_time = tmp_time
-                self.run(abs(float(str(current_data))), bongPlus, True, bongFlag, str(sale_time), debugFlag)
+                self.run(abs(float(str(current_data))), bongPlus, True, bongFlag, str(sale_time), '11', debugFlag)
 
             # print(current_data,type(current_data))
             # print('현재가 : ', current_data)
@@ -570,7 +570,9 @@ def remove_elem(node):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    log_file = open('log' + COM_DATE + '_거래.csv', 'wb')
-    myWindow = MyWindow()
+    log_file = open('log' + COM_DATE + '_거래.csv', 'w')
+    log_file.write('체결시간,BongFlag,가격,봉카운트,거래내역\n')
+    log_file.flush()
+    myWindow = MyWindow(log_file)
     myWindow.show()
     app.exec_()
