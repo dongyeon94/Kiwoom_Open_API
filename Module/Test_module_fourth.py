@@ -1,12 +1,10 @@
 
 import sys
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
 from PyQt5.QAxContainer import *
 from PyQt5.QtCore import pyqtSlot, QTimer
 import datetime
 import time
-import pandas as pd
 
 global current_data
 current_data = 0
@@ -14,8 +12,6 @@ COM_CODE = "CLJ20"  # crude oil
 # COM_DATE = "20200219"  # 기준일자 600 거래일 전일 부터 현제까지 받아옴
 COM_DATE = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
 
-minu = []
-tick = []
 sale_time = None
 bong_start = None
 bong_end = None
@@ -114,16 +110,10 @@ class MyWindow(QMainWindow):
         self.log_file = log_file
 
     def test(self):
-        # self.stock_sale_wati()
         self.stock_buy_wait()
-        # self.stock_buy_order()
-        # time.sleep(1)
-        # self.stock_sale_order(price=40.00)
-        # self.stock_buy_order()
 
     def run(self, price, bongPlus, tickFlag, bongFlag, sale_time, option, debug_flag):
         global head, type_sell, type_buy, bongP, lastTickPrice
-        print('run test', price, ', 시간 : ', sale_time)
         if price is None:
             return
         if lastTickPrice == 0:
@@ -352,7 +342,6 @@ class MyWindow(QMainWindow):
                     bongFlag = True
             if bongPlus is not None:
                 sale_time = tmp_time
-                tick.append(current_data)
                 self.run(abs(float(str(current_data))), bongPlus, True, bongFlag, str(sale_time), debugFlag)
 
             # print(current_data,type(current_data))
@@ -460,7 +449,6 @@ class MyWindow(QMainWindow):
                 outputVal = ['', '', '', '', '', '']
                 for idx, j in enumerate(inputVal):
                     outputVal[idx] = self.kiwoom.GetCommData(sTrCode, sRQName, dataIdx, j)
-                minu.append(outputVal)
                 # print(outputVal[1])
                 #self.run(abs(float(str(outputVal[1]))), abs(float(str(outputVal[1]))), True, True, outputVal[0], debugFlag)
                 # self.run(current_data,outputVal[1],True,True)
@@ -586,9 +574,3 @@ if __name__ == "__main__":
     myWindow = MyWindow()
     myWindow.show()
     app.exec_()
-    # minu
-    # tick
-    data1 = pd.DataFrame(minu, index=None)
-    data2 = pd.DataFrame(tick, index=None)
-    data1.to_csv('분봉.csv', index=None)
-    data2.to_csv('틱.csv', index=None)
