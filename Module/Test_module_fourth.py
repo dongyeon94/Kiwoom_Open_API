@@ -82,6 +82,10 @@ class MyWindow(QMainWindow):
         self.endtime.setDisplayFormat("hh:mm:ss")
         self.endtime.move(200, 320)
 
+        # 디버깅 모드
+        self.debug_check = QCheckBox('디버깅모드', self)
+        self.debug_check.move(200, 600)
+        self.debug_check.clicked.connect(self.debug_check_fun)
 
 
         # 시작
@@ -128,6 +132,13 @@ class MyWindow(QMainWindow):
 
         # self.stock_buy_wait()
 
+
+
+    def debug_check_fun(self):
+        if self.debug_check.isChecked():
+            return True
+        else:
+            return False
 
     def run(self, price, bongPlus, tickFlag, bongFlag, sale_time, option, debug_flag):
         global head, type_sell, type_buy, bongP, lastTickPrice
@@ -207,7 +218,6 @@ class MyWindow(QMainWindow):
                 if option[0] == '1' and bongP <= -3:
                     if bongPlus > 0:
                         # 매수진입: bong 3번 내려갔다가 한번 오르면 삼
-                        print(type(price), str(price), '봉진입 사는거')
                         pri = round(price + 0.03, 2)
                         self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP) + ',' + '매수 진입: $' + str(pri) + '에 예약\n')
                         self.stock_buy_order()
