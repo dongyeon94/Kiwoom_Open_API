@@ -2,7 +2,7 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QAxContainer import *
-from PyQt5.QtCore import pyqtSlot, QTimer,QObject,QThread
+from PyQt5.QtCore import pyqtSlot, QTimer, QObject, QThread
 import datetime
 import time
 import threading
@@ -28,6 +28,8 @@ bongP = 0
 bongPlus = None
 # 마지막 가격. 첫 가격으로 자동으로 바뀜.
 lastTickPrice = 0
+
+debug_file_started = False
 
 # Hardcoded
 numBought = 10
@@ -80,13 +82,15 @@ class MyWindow(QMainWindow):
         self.endtime.setDisplayFormat("hh:mm:ss")
         self.endtime.move(200, 320)
 
-
         # 디버깅 모드
-        self.debug_check = QCheckBox('디버깅모드',self)
-        self.debug_check.move(200,600)
+        self.debug_check = QCheckBox('디버깅모드', self)
+        self.debug_check.move(200, 600)
         self.debug_check.clicked.connect(self.debug_check_fun)
-        self.debug_On = False
 
+        self.debug_file = QPushButton('디버깅 파일', self)
+        self.debug_file.move(200, 650)
+        self.debug_file.clicked.connect(self.debug_file_fun)
+        self.debug_file_obj = None
 
         # 시작
         module_start = QPushButton('시뮬레이션 시작', self)
@@ -132,22 +136,31 @@ class MyWindow(QMainWindow):
     def test(self):
         int(self.stoct_num.text())
 
-
     def debug_check_fun(self):
         if self.debug_check.isChecked():
-            self.debug_On = True
             return True
         else:
-            self.debug_On = False
             return False
+
+    def debug_file_fun(self):
+        fname = QFileDialog.getOpenFileName(self, 'Open file', "",
+                                            "All Files(*);; Python Files(*.py)", '/home')
+        if fname[0]:
+            f = open(fname[0], 'r')
+            # flines = f.readlines()
+            # for line in flines:
+            #     print(line)
+        else:
+            QMessageBox.about(self, "Warning", "파일을 선택하지 않았습니다.")
+        self.debug_file_obj = f
 
     def run(self, price, bongPlus, tickFlag, bongFlag, sale_time, option):
         global head, type_sell, type_buy, bongP, lastTickPrice
         if price is None:
             return
-        if lastTickPrice == 0:
+        if lastTickPrice == None:
             lastTickPrice = price
-            self.log_file.write(str(sale_time)+','+ str(bongFlag) + ',' + str(price)+","+str(bongP)+'\n')
+            self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + "," + str(bongP) + '\n')
             self.log_file.flush()
             return
 
@@ -162,13 +175,15 @@ class MyWindow(QMainWindow):
                 if curr.type == type_buy:
                     # Option2: 매수거래가 3틱이상 올랐을때 매도
                     if curr.tickP == 3:
-                        self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP) + ',' + 'opt2_익절 $' + str(curr.price) + '에 매수 후 $' + str(price) + '에 매도\n')
+                        self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
+                            bongP) + ',' + 'opt2_익절 $' + str(curr.price) + '에 매수 후 $' + str(price) + '에 매도\n')
                         # 익절은 예약에서 알아서 팔림
                         remove_elem(curr)
                         tickSold = True
                     # Option4: 매수거래가 6틱이상 하락했을때 매도
                     elif curr.tickP == -6:
-                        self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP) + ',' + 'opt4_손절 $' + str(curr.price) + '에 매수 후 $' + str(price) + '에 매도\n')
+                        self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
+                            bongP) + ',' + 'opt4_손절 $' + str(curr.price) + '에 매수 후 $' + str(price) + '에 매도\n')
                         remove_elem(curr)
                         tickSold = True
                         self.stock_buy_wait()
@@ -176,12 +191,14 @@ class MyWindow(QMainWindow):
                 else:
                     # Option2_reverse: 매도거래가 3틱이상 내렸을 때 매도
                     if curr.tickP == -3:
-                        self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP) + ',' + 'opt2r_익절 $' + str(curr.price) + '에 매도 후 $' + str(price) + '에 매수\n')
+                        self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
+                            bongP) + ',' + 'opt2r_익절 $' + str(curr.price) + '에 매도 후 $' + str(price) + '에 매수\n')
                         remove_elem(curr)
                         tickSold = True
                     # Option4_reverse: 매도거래가 6틱이상 상승했을때 매도
                     elif curr.tickP == 6:
-                        self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP) + ',' + 'opt4r_손절 $' + str(curr.price) + '에 매도 후 $' + str(price) + '에 매수\n')
+                        self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
+                            bongP) + ',' + 'opt4r_손절 $' + str(curr.price) + '에 매도 후 $' + str(price) + '에 매수\n')
                         remove_elem(curr)
                         self.stock_sale_wait()
 
@@ -192,15 +209,17 @@ class MyWindow(QMainWindow):
                 elif bongPlus < 0:
                     curr.bongP -= 1
                 if curr.type == type_buy:
-                    if curr.bongP == -1 and curr.bongCount >= 1:
+                    if curr.bongP == -1 and curr.bongCount == 1:
                         # Option3: 매수진입 직후 마이너스 봉일때 바로 팜
-                        self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP) + ',' + 'opt3_손절 $' + str(curr.price) + '에 매수 후 $' + str(price) + '에 매도\n')
+                        self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
+                            bongP) + ',' + 'opt3_손절 $' + str(curr.price) + '에 매수 후 $' + str(price) + '에 매도\n')
                         self.stock_buy_wait()
                         remove_elem(curr)
                 else:
-                    if curr.bongP == 1 and curr.bongCount <= -1:
+                    if curr.bongP == 1 and curr.bongCount == 1:
                         # Option3_reverse: 매도진입 직후 플러스 봉일때 바로 팜
-                        self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP) + ',' + 'opt3r_손절 $' + str(curr.price) + '에 매도 후 $' + str(price) + '에 매수\n')
+                        self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
+                            bongP) + ',' + 'opt3r_손절 $' + str(curr.price) + '에 매도 후 $' + str(price) + '에 매수\n')
                         self.stock_sale_wait()
                         remove_elem(curr)
                 curr.bongCount += 1
@@ -220,7 +239,8 @@ class MyWindow(QMainWindow):
                     if bongPlus > 0:
                         # 매수진입: bong 3번 내려갔다가 한번 오르면 삼
                         pri = round(price + 0.03, 2)
-                        self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP) + ',' + '매수 진입: $' + str(pri) + '에 예약\n')
+                        self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
+                            bongP) + ',' + '매수 진입: $' + str(pri) + '에 예약\n')
                         self.stock_buy_order()
                         time.sleep(1)
                         self.stock_sale_order(pri)
@@ -230,7 +250,8 @@ class MyWindow(QMainWindow):
                     if bongPlus < 0:
                         # 매도진입: bong 3번 올랐다가 한번 내리면 삼
                         pri = round(price - 0.03, 2)
-                        self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP) + ',' + '매도 진입: $' + str(pri) + '에 예약\n')
+                        self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
+                            bongP) + ',' + '매도 진입: $' + str(pri) + '에 예약\n')
                         self.stock_sale_order()
                         time.sleep(1)
                         self.stock_buy_order(pri)
@@ -259,25 +280,31 @@ class MyWindow(QMainWindow):
         getPrice = 0
         #                             구분 , 화면번호 , 계좌 , 주문유형 ,종목코드, 개수,가격, stop가격, 거래구분, 주문번호
         if price == 0:
-            data = self.kiwoom.SendOrder('주식매수', "1211", self.account.text(), 2, self.stoct_code.text(), int(self.stoct_num.text()), str(price), "", "1", "")
+            data = self.kiwoom.SendOrder('주식매수', "1211", self.account.text(), 2, self.stoct_code.text(),
+                                         int(self.stoct_num.text()), str(price), "", "1", "")
         else:
-            data = self.kiwoom.SendOrder('주식매수', "1211", self.account.text(), 2, self.stoct_code.text(), int(self.stoct_num.text()), str(price), "", "2", "")
+            data = self.kiwoom.SendOrder('주식매수', "1211", self.account.text(), 2, self.stoct_code.text(),
+                                         int(self.stoct_num.text()), str(price), "", "2", "")
         print(data, '...')
         return getPrice
+
     # 주식 매도
     def stock_sale_order(self, price=0):
         print('매도중', price)
         #                             구분 , 화면번호 , 계좌 , 주문유형 ,종목코드, 개수,가격, stop가격, 거래구분, 주문번호
         if price == 0:
-            data = self.kiwoom.SendOrder('주식매도', "1212", self.account.text(), 1, self.stoct_code.text(), int(self.stoct_num.text()), str(price), "", "1", "")
+            data = self.kiwoom.SendOrder('주식매도', "1212", self.account.text(), 1, self.stoct_code.text(),
+                                         int(self.stoct_num.text()), str(price), "", "1", "")
         else:
-            data = self.kiwoom.SendOrder('주식매도', "1212", self.account.text(), 1, self.stoct_code.text(), int(self.stoct_num.text()), str(price), "", "2", "")
+            data = self.kiwoom.SendOrder('주식매도', "1212", self.account.text(), 1, self.stoct_code.text(),
+                                         int(self.stoct_num.text()), str(price), "", "2", "")
         print(data, '...')
 
     # 주식 매도 정정 취소
     def stock_sale_modify(self, code):
         #                             구분 , 화면번호 , 계좌 , 주문유형 ,종목코드, 개수,가격, stop가격, 거래구분, 주문번호
-        data = self.kiwoom.SendOrder('주식정정', "1213", self.account.text(), 3, self.stoct_code.text(),int(self.stoct_num.text()), "0", "0", "2", str(code[6:]))
+        data = self.kiwoom.SendOrder('주식정정', "1213", self.account.text(), 3, self.stoct_code.text(),
+                                     int(self.stoct_num.text()), "0", "0", "2", str(code[6:]))
         time.sleep(1)
         print(data)
         self.stock_sale_order()
@@ -285,15 +312,13 @@ class MyWindow(QMainWindow):
     # 주식 매수 정정 취소
     def stock_buy_modify(self, code):
         #                             구분 , 화면번호 , 계좌 , 주문유형 ,종목코드, 개수,가격, stop가격, 거래구분, 주문번호
-        data = self.kiwoom.SendOrder('주식정정', "1213", self.account.text(), 4, self.stoct_code.text(),int(self.stoct_num.text()), "0", "0", "2", str(code[6:]))
+        data = self.kiwoom.SendOrder('주식정정', "1213", self.account.text(), 4, self.stoct_code.text(),
+                                     int(self.stoct_num.text()), "0", "0", "2", str(code[6:]))
         time.sleep(1)
         print(data)
         self.stock_buy_order()
 
-
     # ------ 주식 주문  end  -------
-
-
 
     # ------ 데이터 수신 기능  start  -------
 
@@ -319,12 +344,16 @@ class MyWindow(QMainWindow):
 
     # 실시간 체결 정보 수신 데이터
     def realData(self, sJongmokCode, sRealType, sRealData):
-        global sale_time, bong_start, bong_end, bongPlus
-        # print(sRealType)
+        global sale_time, bong_start, bong_end, bongPlus, debug_file_started
         if sRealType == "해외선물시세":
             bongFlag = False
-            if self.debug_On:
-                current_data = self.debugFile.read()
+            if self.debug_check_fun():
+                if debug_file_started is False:
+                    #첫줄 날려버리기
+                    self.debug_file_obj.readline()
+                dataline = self.debug_file_obj.readline().rstrip().split(",")
+                tmp_time = dataline[0]
+                current_data = dataline[2]
             else:
                 current_data = self.kiwoom.GetCommRealData(sRealType, 10)
                 # market_data = self.kiwoom.GetCommRealData(sJongmokCode, 16)
@@ -441,7 +470,7 @@ class MyWindow(QMainWindow):
                 for idx, j in enumerate(inputVal):
                     outputVal[idx] = self.kiwoom.GetCommData(sTrCode, sRQName, dataIdx, j)
                 # print(outputVal[1])
-                #self.run(abs(float(str(outputVal[1]))), abs(float(str(outputVal[1]))), True, True, outputVal[0], debugFlag)
+                # self.run(abs(float(str(outputVal[1]))), abs(float(str(outputVal[1]))), True, True, outputVal[0], debugFlag)
                 # self.run(current_data,outputVal[1],True,True)
                 # for idx, output in enumerate(outputVal):
                 #     print(inputVal[idx] + ' : ' + output)
@@ -464,9 +493,6 @@ class MyWindow(QMainWindow):
         return te
 
     # ------ 데이터 수신 기능  end  -------
-
-
-
 
     # ------ 유저 정보  start  -------
     def login_clicked(self):
@@ -503,7 +529,6 @@ class MyWindow(QMainWindow):
 
         print('방화벽 설정여부  :', info_firew_secgb, '  [0:미설정 / 1:설정 / 2:해지]')
         print('---------------------------------')
-
 
     # ------ 유저 정보  end  -------
 
