@@ -198,13 +198,13 @@ class MyWindow(QMainWindow):
                 elif bongPlus < 0:
                     curr.bongP -= 1
                 if curr.type == type_buy:
-                    if curr.bongP == -1 and curr.bongCount >= 1:
+                    if curr.bongP == -1 and curr.bongCount == 1:
                         # Option3: 매수진입 직후 마이너스 봉일때 바로 팜
                         self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP) + ',' + 'opt3_손절 $' + str(curr.price) + '에 매수 후 $' + str(price) + '에 매도\n')
                         self.stock_buy_wait()
                         remove_elem(curr)
                 else:
-                    if curr.bongP == 1 and curr.bongCount <= -1:
+                    if curr.bongP == 1 and curr.bongCount == 1:
                         # Option3_reverse: 매도진입 직후 플러스 봉일때 바로 팜
                         self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP) + ',' + 'opt3r_손절 $' + str(curr.price) + '에 매도 후 $' + str(price) + '에 매수\n')
                         self.stock_sale_wait()
