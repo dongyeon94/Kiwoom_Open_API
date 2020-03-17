@@ -430,15 +430,16 @@ class MyWindow(QMainWindow):
 
     # 실시간 데이터  ( 종목에 대해 실시간 정보 요청을 실행함)
     def real_data(self):
-        self.kiwoom.SetInputValue('종목코드', self.stoct_code.text())
-        self.kiwoom.SetInputValue('시간단위', "1")
-        res = self.kiwoom.CommRqData('해외선물시세', 'opt10011', "0", 'opt10011')
-
-        self.kiwoom.OnReceiveRealData.connect(self.realData)
+        if self.debug_check_fun() is False:
+            self.kiwoom.SetInputValue('종목코드', self.stoct_code.text())
+            self.kiwoom.SetInputValue('시간단위', "1")
+            res = self.kiwoom.CommRqData('해외선물시세', 'opt10011', "0", 'opt10011')
+            self.kiwoom.OnReceiveRealData.connect(self.realData)
 
     # 실시간 데이터 디스커넥
     def real_data_disconnect(self):
-        self.kiwoom.DisconnectRealData('opt10011')
+        if self.debug_check_fun() is False:
+            self.kiwoom.DisconnectRealData('opt10011')
 
     # 매도 미체결 취소 조회
     def stock_buy_wait(self):
