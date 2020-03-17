@@ -88,6 +88,10 @@ class MyWindow(QMainWindow):
         self.debug_check.move(200,600)
         self.debug_check.clicked.connect(self.debug_check_fun)
 
+        self.debug_file = QPushButton('디버깅 파일',self)
+        self.debug_file.move(200, 650)
+        self.debug_file.clicked.connect(self.debug_file_fun)
+
 
         # 시작
         module_start = QPushButton('시뮬레이션 시작', self)
@@ -146,6 +150,23 @@ class MyWindow(QMainWindow):
             return True
         else:
             return False
+
+    def debug_file_fun(self):
+        fname = QFileDialog.getOpenFileName(self, 'Open file', "",
+                                            "All Files(*);; Python Files(*.py)", '/home')
+        if fname[0]:
+            f = open(fname[0], 'r')
+            flines = f.readlines()
+
+            for line in flines:
+                print(line)
+        else:
+            QMessageBox.about(self, "Warning", "파일을 선택하지 않았습니다.")
+
+        # print(fname[0])
+        # print(fname[1])
+        return fname[0]
+
 
     def run(self, price, bongPlus, tickFlag, bongFlag, sale_time, option, debug_flag):
         global head, type_sell, type_buy, bongP, lastTickPrice
