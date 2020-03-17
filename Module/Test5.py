@@ -1,7 +1,7 @@
 
 import sys
 from PyQt5.QtWidgets import *
-# from PyQt5.QAxContainer import *
+from PyQt5.QAxContainer import *
 from PyQt5.QtCore import pyqtSlot, QTimer, QObject, QThread
 import datetime
 import time
@@ -152,7 +152,7 @@ class MyWindow(QMainWindow):
 
     def run(self, price, bongPlus, tickFlag, bongFlag, sale_time, option):
         if self.debug_check_fun() is False and self.log_file is None:
-            self.log_file = open('log' + COM_DATE + '_거래.csv', 'w', "utf-8-sig")
+            self.log_file = open('log' + COM_DATE + '_거래.csv', mode='wt', encoding='utf-8')
             self.log_file.write('체결시간,BongFlag,가격,봉카운트,거래내역\n')
             self.log_file.flush()
         global head, type_sell, type_buy, bongP, lastTickPrice
@@ -376,7 +376,7 @@ class MyWindow(QMainWindow):
                 print('요청 실패')
             self.kiwoom.OnReceiveRealData.connect(self.realData)
         else:
-            debugFile = open(self.debug_file_name, 'r')
+            debugFile = open(self.debug_file_name, mode='rt',encoding="utf-8")
             while True:
                 try:
                     if debug_file_started is False:
