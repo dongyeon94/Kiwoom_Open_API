@@ -112,30 +112,15 @@ class MyWindow(QMainWindow):
         # 데이터 수신 이벤트
         self.kiwoom.OnReceiveTrData.connect(self.receive_trdata)
 
+
         #로그파일
         self.log_file = log_file
-
-
 
     def test(self):
         int(self.stoct_num.text())
 
+        # self.stock_buy_wait()
 
-    def start_time(self):
-        return self.starttime.time().toString().replace(':', '')
-
-    def end_time(self):
-        return self.endtime.time().toString().replace(':', '')
-
-    def checkbox(self):
-        te = ''
-        if self.ChekGroup1.isChecked():
-            te = '10'
-        if self.ChekGroup2.isChecked():
-            te = '01'
-        if self.ChekGroup1.isChecked() and self.ChekGroup2.isChecked():
-            te = '11'
-        return te
 
     def run(self, price, bongPlus, tickFlag, bongFlag, sale_time, option, debug_flag):
         global head, type_sell, type_buy, bongP, lastTickPrice
@@ -248,18 +233,22 @@ class MyWindow(QMainWindow):
         self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP) + ',' + '\n')
         self.log_file.flush()
 
+
+
+
     # ------ 주식 주문  start  -------
 
     # 주식 매수
     def stock_buy_order(self, price=0):
         print('매수중', price)
+        getPrice = 0
         #                             구분 , 화면번호 , 계좌 , 주문유형 ,종목코드, 개수,가격, stop가격, 거래구분, 주문번호
         if price == 0:
             data = self.kiwoom.SendOrder('주식매수', "1211", self.account.text(), 2, self.stoct_code.text(), int(self.stoct_num.text()), str(price), "", "1", "")
         else:
             data = self.kiwoom.SendOrder('주식매수', "1211", self.account.text(), 2, self.stoct_code.text(), int(self.stoct_num.text()), str(price), "", "2", "")
         print(data, '...')
-
+        return getPrice
     # 주식 매도
     def stock_sale_order(self, price=0):
         print('매도중', price)
@@ -270,7 +259,6 @@ class MyWindow(QMainWindow):
             data = self.kiwoom.SendOrder('주식매도', "1212", self.account.text(), 1, self.stoct_code.text(), int(self.stoct_num.text()), str(price), "", "2", "")
         print(data, '...')
 
-
     # 주식 매도 정정 취소
     def stock_sale_modify(self, code):
         #                             구분 , 화면번호 , 계좌 , 주문유형 ,종목코드, 개수,가격, stop가격, 거래구분, 주문번호
@@ -278,8 +266,6 @@ class MyWindow(QMainWindow):
         time.sleep(1)
         print(data)
         self.stock_sale_order()
-
-
 
     # 주식 매수 정정 취소
     def stock_buy_modify(self, code):
@@ -292,10 +278,17 @@ class MyWindow(QMainWindow):
 
     # ------ 주식 주문  end  -------
 
+
+
     # ------ 데이터 수신 기능  start  -------
 
     def data_loading(self):
         print('데이터 로딩')
+        # 분봉 1분마다  start안에 숫자는 1/1000초  1분 = self.password.text()
+        # self.minute_data()
+        # self.timer = QTimer(self)
+        # self.timer.start(self.password.text())
+        # self.timer.timeout.connect(self.minute_data)
 
         # 실시간 체결 데이터 로딩
         self.kiwoom.SetInputValue('종목코드', self.stoct_code.text())
@@ -433,7 +426,26 @@ class MyWindow(QMainWindow):
                 #     print(inputVal[idx] + ' : ' + output)
                 # print('----------------')
 
+    def start_time(self):
+        return self.starttime.time().toString().replace(':', '')
+
+    def end_time(self):
+        return self.endtime.time().toString().replace(':', '')
+
+    def checkbox(self):
+        te = ''
+        if self.ChekGroup1.isChecked():
+            te = '10'
+        if self.ChekGroup2.isChecked():
+            te = '01'
+        if self.ChekGroup1.isChecked() and self.ChekGroup2.isChecked():
+            te = '11'
+        return te
+
     # ------ 데이터 수신 기능  end  -------
+
+
+
 
     # ------ 유저 정보  start  -------
     def login_clicked(self):
