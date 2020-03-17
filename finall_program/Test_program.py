@@ -34,7 +34,7 @@ lastTickPrice = 0
 # Hardcoded
 numBought = 10
 
-pricess = []
+
 class MyWindow(QMainWindow):
     def __init__(self, log_file):
         # 초기 setup 모듈 로딩 등
@@ -83,6 +83,11 @@ class MyWindow(QMainWindow):
         self.endtime.move(200, 320)
 
 
+        # 디버깅 모드
+        self.debug_check = QCheckBox('디버깅모드',self)
+        self.debug_check.move(200,600)
+        self.debug_check.clicked.connect(self.debug_check_fun)
+
 
         # 시작
         module_start = QPushButton('시뮬레이션 시작', self)
@@ -110,62 +115,31 @@ class MyWindow(QMainWindow):
         sale_btn.move(20, 320)
         sale_btn.clicked.connect(self.stock_sale_order)
 
-        # 데이터 수신 이벤트
-        self.kiwoom.OnReceiveTrData.connect(self.receive_trdata)
-        # self.kiwoom.OnReceiveChejanData.connect(self.recive_chenjan)
-
-
-        #로그파일
-        self.log_file = log_file
-
-
-
-
 
 
         test_ = QPushButton(' 테스트', self)
         test_.move(20, 600)
         test_.clicked.connect(self.test)
 
+        # 데이터 수신 이벤트
+        self.kiwoom.OnReceiveTrData.connect(self.receive_trdata)
 
-        self.account.setText('7009039772')
-        self.stoct_code.setText('CLJ20')
-        self.password.setText('0000')
-        self.stoct_num.setText('1')
+
+        #로그파일
+        self.log_file = log_file
 
     def test(self):
-        self.stock_sale_wait()
+        int(self.stoct_num.text())
 
-    # def test(self):
-    #     self.stock_buy_order()
-    #     time.sleep(1)
-    #     data = self.recive_chenjan('1')
-    #     data2 = self.recive_chenjan('0')
-    #     time.sleep(2)
-    #     print('111',data)
-    #     print('222',data2)
-    #     print(pricess[0])
-    #     # pri = round(float(data+0.03),2)
-    #     # self.stock_sale_order(pri)
-    #
-    #
-    # def recive_chenjan(self,sGubun):
-    #     print('sgubun',sGubun)
-    #     if sGubun=='0':
-    #         dd = self.kiwoom.GetChejanData(910)
-    #         if len(dd) > 0:
-    #             pri =round(float(dd), 2)
-    #             # print('00',pri)
-    #             # print('-----')
-    #             pricess.append(pri)
-    #             return pri
-    #     if sGubun=='1':
-    #         dd = self.kiwoom.GetChejanData(910)
-    #         if len(dd) > 0:
-    #             pri =round(float(dd), 2)
-    #             # print('11',pri)
-    #             # print('-----')
-    #             return pri
+        # self.stock_buy_wait()
+
+
+
+    def debug_check_fun(self):
+        if self.debug_check.isChecked():
+            return True
+        else:
+            return False
 
     def run(self, price, bongPlus, tickFlag, bongFlag, sale_time, option, debug_flag):
         global head, type_sell, type_buy, bongP, lastTickPrice
@@ -245,7 +219,6 @@ class MyWindow(QMainWindow):
                 if option[0] == '1' and bongP <= -3:
                     if bongPlus > 0:
                         # 매수진입: bong 3번 내려갔다가 한번 오르면 삼
-                        # print(type(price), str(price), '봉진입 사는거')
                         pri = round(price + 0.03, 2)
                         self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP) + ',' + '매수 진입: $' + str(pri) + '에 예약\n')
                         self.stock_buy_order()
@@ -277,9 +250,6 @@ class MyWindow(QMainWindow):
         lastTickPrice = price
         self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP) + ',' + '\n')
         self.log_file.flush()
-
-
-
 
     # ------ 주식 주문  start  -------
 
