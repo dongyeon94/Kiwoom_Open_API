@@ -338,10 +338,13 @@ class MyWindow(QMainWindow):
                 if bong_start is None:
                     bong_start = abs(float(str(current_data)))
                 else:
-                    bong_end = abs(float(str(current_data)))
                     bongPlus = bong_end - bong_start
-                    bong_start = bong_end
+                    if abs(bongPlus) <= 0.01:
+                        bongPlus = 0
+                    bong_start = abs(float(str(current_data)))
                     bongFlag = True
+            else:
+                bong_end = abs(float(str(current_data)))
             if bongPlus is not None:
                 sale_time = tmp_time
                 if sale_time> int(self.start_time()) and sale_time <int(self.end_time()):
