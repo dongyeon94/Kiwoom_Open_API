@@ -16,8 +16,6 @@ sale_time = None
 bong_start = None
 bong_end = None
 
-debugFlag = True
-
 # Head for Doubly LinkedList(매수한 선물 리스트)
 head = None
 
@@ -87,6 +85,7 @@ class MyWindow(QMainWindow):
         self.debug_check = QCheckBox('디버깅모드',self)
         self.debug_check.move(200,600)
         self.debug_check.clicked.connect(self.debug_check_fun)
+        self.debug_On = False
 
 
         # 시작
@@ -121,10 +120,6 @@ class MyWindow(QMainWindow):
         # 로그파일
         self.log_file = log_file
 
-
-
-
-
         test_ = QPushButton(' 테스트', self)
         test_.move(20, 600)
         test_.clicked.connect(self.test)
@@ -137,17 +132,16 @@ class MyWindow(QMainWindow):
     def test(self):
         int(self.stoct_num.text())
 
-        # self.stock_buy_wait()
-
-
 
     def debug_check_fun(self):
         if self.debug_check.isChecked():
+            self.debug_On = True
             return True
         else:
+            self.debug_On = False
             return False
 
-    def run(self, price, bongPlus, tickFlag, bongFlag, sale_time, option, debug_flag):
+    def run(self, price, bongPlus, tickFlag, bongFlag, sale_time, option):
         global head, type_sell, type_buy, bongP, lastTickPrice
         if price is None:
             return
@@ -328,10 +322,13 @@ class MyWindow(QMainWindow):
         global sale_time, bong_start, bong_end, bongPlus
         # print(sRealType)
         if sRealType == "해외선물시세":
-            current_data = self.kiwoom.GetCommRealData(sRealType, 10)
             bongFlag = False
-            # market_data = self.kiwoom.GetCommRealData(sJongmokCode, 16)
-            tmp_time = int(self.kiwoom.GetCommRealData(sRealType, 20))
+            if self.debug_On:
+                current_data = self.debugFile.read()
+            else:
+                current_data = self.kiwoom.GetCommRealData(sRealType, 10)
+                # market_data = self.kiwoom.GetCommRealData(sJongmokCode, 16)
+                tmp_time = int(self.kiwoom.GetCommRealData(sRealType, 20))
             if sale_time is None:
                 sale_time = tmp_time
             if tmp_time // 100 > sale_time // 100:
@@ -347,8 +344,8 @@ class MyWindow(QMainWindow):
                 bong_end = abs(float(str(current_data)))
             if bongPlus is not None:
                 sale_time = tmp_time
-                if sale_time> int(self.start_time()) and sale_time <int(self.end_time()):
-                    self.run(abs(float(str(current_data))), bongPlus, True, bongFlag, str(sale_time), self.checkbox(), debugFlag)
+                if int(self.start_time()) < sale_time < int(self.end_time()):
+                    self.run(abs(float(str(current_data))), bongPlus, True, bongFlag, str(sale_time), self.checkbox())
 
     # 실시간 데이터  ( 종목에 대해 실시간 정보 요청을 실행함)
     def real_data(self):

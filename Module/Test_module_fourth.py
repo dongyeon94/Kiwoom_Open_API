@@ -333,10 +333,9 @@ class MyWindow(QMainWindow):
                 else:
                     bongPlus = bong_end - bong_start
                     if abs(bongPlus) <= 0.01:
-                        bongPlus = None
-                    else:
-                        bong_start = abs(float(str(current_data)))
-                        bongFlag = True
+                        bongPlus = 0
+                    bong_start = abs(float(str(current_data)))
+                    bongFlag = True
             else:
                 bong_end = abs(float(str(current_data)))
             if bongPlus is not None:
