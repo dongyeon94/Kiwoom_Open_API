@@ -10,7 +10,6 @@ import threading
 global current_data
 current_data = 0
 CODE = "CLJ20"  # crude oil
-# COM_DATE = "20200219"  # 기준일자 600 거래일 전일 부터 현제까지 받아옴
 COM_DATE = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
 
 sale_time = None
@@ -34,33 +33,18 @@ lastTickPrice = 0
 
 # Hardcoded
 numBought = 10
-# class AWorker(QObject):
-#     def __init__(self):
-#         super(AWorker, self).__init__()
-#
-#     def myfunction(self):
-#         print("test__start")
-#         super(AWorker, self).login_info()
-#         time.sleep(1)
-#
-#         print("test__Done")
+
 
 class MyWindow(QMainWindow):
     def __init__(self, log_file):
         # 초기 setup 모듈 로딩 등
         super().__init__()
-        # self.worker=AWorker()
-        # self.thread = QThread()
-        # self.worker.moveToThread(self.thread)
-        # self.thread.started.connect(self.worker.myfunction)
-        # # self.thread.finished.connect(self.mythreadhasfinished)
-        # self.thread.start()
 
         self.setWindowTitle("PyStock")
         self.setGeometry(300, 150, 400, 800)
         self.kiwoom = QAxWidget("KFOpenAPI.KFOpenAPICtrl.1")
 
-        # 기능 정리
+        # 입력 기능 정리
         self.account = QLineEdit(self)
         self.account.move(200, 20)
         self.account.resize(100, 30)
@@ -106,33 +90,18 @@ class MyWindow(QMainWindow):
         module_start.clicked.connect(self.data_loading)
 
         # 로그인
-        login_btn = QPushButton("Login", self)
+        login_btn = QPushButton("로그인", self)
         login_btn.move(20, 20)
         login_btn.clicked.connect(self.login_clicked)
 
-        state_btn = QPushButton("Check state", self)
-        state_btn.move(20, 70)
-        state_btn.clicked.connect(self.staate_clicked)
-
-        info_btn = QPushButton('login info', self)
-        info_btn.move(20, 120)
+        info_btn = QPushButton('로그인 확인', self)
+        info_btn.move(20, 70)
         info_btn.clicked.connect(self.login_info)
 
         search_btm = QPushButton('주식 조회', self)
         search_btm.move(20, 170)
         search_btm.clicked.connect(self.subject_search)
 
-        min_btn = QPushButton('분봉 조회', self)
-        min_btn.move(20, 220)
-        min_btn.clicked.connect(self.minute_data)
-
-        buy_btn = QPushButton('매수버튼', self)
-        buy_btn.move(20, 270)
-        buy_btn.clicked.connect(self.stock_buy_order)
-
-        sale_btn = QPushButton('매도 버튼', self)
-        sale_btn.move(20, 320)
-        sale_btn.clicked.connect(self.stock_sale_order)
 
 
 
@@ -143,6 +112,7 @@ class MyWindow(QMainWindow):
         # 데이터 수신 이벤트
         self.kiwoom.OnReceiveTrData.connect(self.receive_trdata)
 
+
         #로그파일
         self.log_file = log_file
 
@@ -151,22 +121,6 @@ class MyWindow(QMainWindow):
 
         # self.stock_buy_wait()
 
-
-    def start_time(self):
-        return self.starttime.time().toString().replace(':', '')
-
-    def end_time(self):
-        return self.endtime.time().toString().replace(':', '')
-
-    def checkbox(self):
-        te = ''
-        if self.ChekGroup1.isChecked():
-            te = '10'
-        if self.ChekGroup2.isChecked():
-            te = '01'
-        if self.ChekGroup1.isChecked() and self.ChekGroup2.isChecked():
-            te = '11'
-        return te
 
     def run(self, price, bongPlus, tickFlag, bongFlag, sale_time, option, debug_flag):
         global head, type_sell, type_buy, bongP, lastTickPrice
@@ -250,7 +204,7 @@ class MyWindow(QMainWindow):
                         pri = round(price + 0.03, 2)
                         self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP) + ',' + '매수 진입: $' + str(pri) + '에 예약\n')
                         self.stock_buy_order()
-                        # time.sleep(1)
+                        time.sleep(1)
                         self.stock_sale_order(pri)
 
                         ll_append(Transaction(type_buy, price, numBought))
@@ -260,7 +214,7 @@ class MyWindow(QMainWindow):
                         pri = round(price - 0.03, 2)
                         self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP) + ',' + '매도 진입: $' + str(pri) + '에 예약\n')
                         self.stock_sale_order()
-                        # time.sleep(1)
+                        time.sleep(1)
                         self.stock_buy_order(pri)
 
                         ll_append(Transaction(type_sell, price, numBought))
@@ -284,13 +238,14 @@ class MyWindow(QMainWindow):
     # 주식 매수
     def stock_buy_order(self, price=0):
         print('매수중', price)
+        getPrice = 0
         #                             구분 , 화면번호 , 계좌 , 주문유형 ,종목코드, 개수,가격, stop가격, 거래구분, 주문번호
         if price == 0:
             data = self.kiwoom.SendOrder('주식매수', "1211", self.account.text(), 2, self.stoct_code.text(), int(self.stoct_num.text()), str(price), "", "1", "")
         else:
             data = self.kiwoom.SendOrder('주식매수', "1211", self.account.text(), 2, self.stoct_code.text(), int(self.stoct_num.text()), str(price), "", "2", "")
         print(data, '...')
-
+        return getPrice
     # 주식 매도
     def stock_sale_order(self, price=0):
         print('매도중', price)
@@ -301,7 +256,6 @@ class MyWindow(QMainWindow):
             data = self.kiwoom.SendOrder('주식매도', "1212", self.account.text(), 1, self.stoct_code.text(), int(self.stoct_num.text()), str(price), "", "2", "")
         print(data, '...')
 
-
     # 주식 매도 정정 취소
     def stock_sale_modify(self, code):
         #                             구분 , 화면번호 , 계좌 , 주문유형 ,종목코드, 개수,가격, stop가격, 거래구분, 주문번호
@@ -309,8 +263,6 @@ class MyWindow(QMainWindow):
         time.sleep(1)
         print(data)
         self.stock_sale_order()
-
-
 
     # 주식 매수 정정 취소
     def stock_buy_modify(self, code):
@@ -322,6 +274,8 @@ class MyWindow(QMainWindow):
 
 
     # ------ 주식 주문  end  -------
+
+
 
     # ------ 데이터 수신 기능  start  -------
 
@@ -469,7 +423,26 @@ class MyWindow(QMainWindow):
                 #     print(inputVal[idx] + ' : ' + output)
                 # print('----------------')
 
+    def start_time(self):
+        return self.starttime.time().toString().replace(':', '')
+
+    def end_time(self):
+        return self.endtime.time().toString().replace(':', '')
+
+    def checkbox(self):
+        te = ''
+        if self.ChekGroup1.isChecked():
+            te = '10'
+        if self.ChekGroup2.isChecked():
+            te = '01'
+        if self.ChekGroup1.isChecked() and self.ChekGroup2.isChecked():
+            te = '11'
+        return te
+
     # ------ 데이터 수신 기능  end  -------
+
+
+
 
     # ------ 유저 정보  start  -------
     def login_clicked(self):
