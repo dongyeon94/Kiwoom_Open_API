@@ -115,18 +115,24 @@ class MyWindow(QMainWindow):
         sale_btn.move(20, 320)
         sale_btn.clicked.connect(self.stock_sale_order)
 
+        # 데이터 수신 이벤트
+        self.kiwoom.OnReceiveTrData.connect(self.receive_trdata)
+
+        # 로그파일
+        self.log_file = log_file
+
+
+
 
 
         test_ = QPushButton(' 테스트', self)
         test_.move(20, 600)
         test_.clicked.connect(self.test)
 
-        # 데이터 수신 이벤트
-        self.kiwoom.OnReceiveTrData.connect(self.receive_trdata)
-
-
-        #로그파일
-        self.log_file = log_file
+        self.account.setText('7009039772')
+        self.stoct_code.setText('CLJ20')
+        self.password.setText('0000')
+        self.stoct_num.setText('1')
 
     def test(self):
         int(self.stoct_num.text())
