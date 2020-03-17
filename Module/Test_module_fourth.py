@@ -102,6 +102,13 @@ class MyWindow(QMainWindow):
         search_btm.move(20, 170)
         search_btm.clicked.connect(self.subject_search)
 
+        buy_btn = QPushButton('매수버튼', self)
+        buy_btn.move(20, 270)
+        buy_btn.clicked.connect(self.stock_buy_order)
+
+        sale_btn = QPushButton('매도 버튼', self)
+        sale_btn.move(20, 320)
+        sale_btn.clicked.connect(self.stock_sale_order)
 
 
 
@@ -152,7 +159,7 @@ class MyWindow(QMainWindow):
                         self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP) + ',' + 'opt4_손절 $' + str(curr.price) + '에 매수 후 $' + str(price) + '에 매도\n')
                         remove_elem(curr)
                         tickSold = True
-                        self.stock_sale_wait()
+                        self.stock_buy_wait()
 
                 else:
                     # Option2_reverse: 매도거래가 3틱이상 내렸을 때 매도
@@ -164,7 +171,7 @@ class MyWindow(QMainWindow):
                     elif curr.tickP == 6:
                         self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP) + ',' + 'opt4r_손절 $' + str(curr.price) + '에 매도 후 $' + str(price) + '에 매수\n')
                         remove_elem(curr)
-                        self.stock_buy_wait()
+                        self.stock_sale_wait()
 
                         tickSold = True
             if bongFlag and not tickSold:
@@ -176,7 +183,7 @@ class MyWindow(QMainWindow):
                     if curr.bongP == -1 and curr.bongCount == 1:
                         # Option3: 매수진입 직후 마이너스 봉일때 바로 팜
                         self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP) + ',' + 'opt3_손절 $' + str(curr.price) + '에 매수 후 $' + str(price) + '에 매도\n')
-                        self.stock_sale_wait()
+                        self.stock_buy_wait()
                         remove_elem(curr)
                 else:
                     if curr.bongP == 1 and curr.bongCount == 1:
