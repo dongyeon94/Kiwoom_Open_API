@@ -82,10 +82,9 @@ class MyWindow(QMainWindow):
         self.endtime.setDisplayFormat("hh:mm:ss")
         self.endtime.move(200, 320)
 
-
         # 디버깅 모드
-        self.debug_check = QCheckBox('디버깅모드',self)
-        self.debug_check.move(200,600)
+        self.debug_check = QCheckBox('디버깅모드', self)
+        self.debug_check.move(200, 600)
         self.debug_check.clicked.connect(self.debug_check_fun)
 
 
