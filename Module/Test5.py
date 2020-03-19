@@ -131,7 +131,7 @@ class MyWindow(QMainWindow):
         test_.clicked.connect(self.test)
 
         self.account.setText('7009039772')
-        self.stoct_code.setText('CLJ20')
+        self.stoct_code.setText('CLK20')
         self.password.setText('0000')
         self.stoct_num.setText('1')
 
