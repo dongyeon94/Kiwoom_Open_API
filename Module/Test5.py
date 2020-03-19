@@ -94,6 +94,10 @@ class MyWindow(QMainWindow):
         self.debug_file.clicked.connect(self.debug_file_fun)
         self.debug_file_obj = None
 
+        self.option_warning  = QMessageBox(self)
+        self.option_warning.resize(300,500)
+
+
         # 시작
         module_start = QPushButton('거래 시작', self)
         module_start.move(200, 450)
@@ -371,6 +375,12 @@ class MyWindow(QMainWindow):
         # self.timer = QTimer(self)
         # self.timer.start(self.password.text())
         # self.timer.timeout.connect(self.minute_data)
+
+        if self.checkbox()=='':
+            # self.option_warning.showMessage('옵션을 선택해주세요')
+            self.option_warning.about(self,'프로그램 경고','시작 전 옵셥을 선택해주세요')
+                # show('옵션을 선택해주세요')
+            return
 
         # 실시간 체결 데이터 로딩
         if self.debug_check_fun() is False:
