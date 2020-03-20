@@ -94,6 +94,10 @@ class MyWindow(QMainWindow):
         self.debug_file.clicked.connect(self.debug_file_fun)
         self.debug_file_obj = None
 
+        self.option_warning  = QMessageBox(self)
+        self.option_warning.resize(300,500)
+
+
         # 시작
         module_start = QPushButton('거래 시작', self)
         module_start.move(200, 450)
@@ -126,32 +130,30 @@ class MyWindow(QMainWindow):
         # 로그파일
         self.log_file = None
 
-
-
         test_ = QPushButton(' 테스트', self)
         test_.move(20, 600)
-        test_.clicked.connect(self.test1)
+        test_.clicked.connect(self.test)
 
         self.account.setText('7009039772')
         self.stoct_code.setText('CLK20')
         self.password.setText('0000')
         self.stoct_num.setText('1')
 
-
         self.kiwoom.OnReceiveChejanData.connect(self.test)
+
     def test1(self):
         print('test22')
         # data = self.test()
         # data = self.kiwoom.OnReceiveChejanData.connect(self.test)
         # print(data)
 
-    def test(self,sGubun,nItemCnt):
+    def test(self, sGubun, nItemCnt):
         print('test중')
-        if sGubun=='0':
+        if sGubun == '0':
             data = self.kiwoom.GetChejanData(910);
-            print('0 : ',data)
-            return  data
-        if sGubun=='1':
+            print('0 : ', data)
+            return data
+        if sGubun == '1':
             data = self.kiwoom.GetChejanData(910);
             print('1 : ', data)
             return data
@@ -348,9 +350,7 @@ class MyWindow(QMainWindow):
         else:
             data = self.kiwoom.SendOrder('주식매수', "1211", self.account.text(), 2, self.stoct_code.text(),
                                          int(self.stoct_num.text()), str(price), "", "2", "")
-        time.sleep(1)
-        # getPrice= self.kiwoom.OnReceiveChejanData.connect(self.test)
-        # print(data, '...',getPrice)
+        print(data, '...')
         return getPrice
 
     # 주식 매도
@@ -395,6 +395,12 @@ class MyWindow(QMainWindow):
         # self.timer = QTimer(self)
         # self.timer.start(self.password.text())
         # self.timer.timeout.connect(self.minute_data)
+
+        if self.checkbox()=='':
+            # self.option_warning.showMessage('옵션을 선택해주세요')
+            self.option_warning.about(self,'프로그램 경고','시작 전 옵셥을 선택해주세요')
+                # show('옵션을 선택해주세요')
+            return
 
         # 실시간 체결 데이터 로딩
         if self.debug_check_fun() is False:
