@@ -129,6 +129,9 @@ class MyWindow(QMainWindow):
 
         # 데이터 수신 이벤트
         self.kiwoom.OnReceiveTrData.connect(self.receive_trdata)
+        self.kiwoom.OnReceiveChejanData.connect(self.get_transaction_data)
+
+
 
         # 로그파일
         self.log_file = None
@@ -142,7 +145,7 @@ class MyWindow(QMainWindow):
         self.password.setText('0000')
         self.stoct_num.setText('1')
 
-        self.kiwoom.OnReceiveChejanData.connect(self.get_transaction_data)
+
 
     def test1(self):
         print('test22')
@@ -152,10 +155,7 @@ class MyWindow(QMainWindow):
 
     def get_transaction_data(self, sGubun, nItemCnt):
         global transaction_flag
-        # if sGubun == '0':
-        #     data = self.kiwoom.GetChejanData(910);
-        #     # print('0 : ', data)
-        #     return data
+
         # 매수 2 매도 1
         if sGubun == '1' and transaction_flag:
             print('test중')
@@ -169,17 +169,13 @@ class MyWindow(QMainWindow):
                 pri = round(price - 0.03, 2)
                 self.stock_buy_order(pri)
             transaction_flag = False
-            # print('1 : ', data)
-            # return data
-        # if sGubun=='4':
-        #     data = self.kiwoom.GetChejanData(910);
-        #     print('4 : ', data)
-        #     return data
 
     def get_transaction_data_debug(self, price, type_buy):
         print('test중')
         ll_append(Transaction(type_buy, price, numBought))
         transaction_flag = False
+
+
 
     def debug_check_fun(self):
         if self.debug_check.isChecked():
@@ -197,15 +193,18 @@ class MyWindow(QMainWindow):
 
     def run(self, price, bongPlus, tickFlag, bongFlag, sale_time, option):
         global head, type_sell, type_buy, bongP, lastTickPrice, total, transaction_flag
+
         if self.debug_check_fun() is False and self.log_file is None:
             self.log_file = open('log' + COM_DATE + '_거래.csv', mode='wt', encoding='utf-8')
             self.log_file.write('체결시간,BongFlag,가격,봉카운트,거래내역\n')
             self.log_file.flush()
+
         if price is None:
             return
+
         if lastTickPrice == None:
             lastTickPrice = price
-            if self.debug_check_ffun() is False:
+            if self.debug_check_fun() is False:
                 self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + "," + str(bongP) + '\n')
                 self.log_file.flush()
             else:
@@ -415,11 +414,7 @@ class MyWindow(QMainWindow):
     def data_loading(self):
         global debug_file_started, total
         print('데이터 로딩')
-        # 분봉 1분마다  start안에 숫자는 1/1000초  1분 = self.password.text()
-        # self.minute_data()
-        # self.timer = QTimer(self)
-        # self.timer.start(self.password.text())
-        # self.timer.timeout.connect(self.minute_data)
+
 
         if self.checkbox()=='':
             # self.option_warning.showMessage('옵션을 선택해주세요')
