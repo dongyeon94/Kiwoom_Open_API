@@ -84,7 +84,7 @@ class MyWindow(QMainWindow):
         self.endtime = QTimeEdit(self)
         self.endtime.setDisplayFormat("hh:mm:ss")
         self.endtime.move(200, 320)
-        self.endtime.setTime(QTime(23, 59))
+        self.endtime.setTime(QTime(23, 59,59))
 
         # 디버깅 모드
         self.debug_check = QCheckBox('디버깅모드', self)
@@ -492,8 +492,10 @@ class MyWindow(QMainWindow):
             if bongPlus is not None:
                 sale_time = tmp_time
                 if self.debug_check_fun() is False:
-                    if int(self.start_time()) < sale_time < int(self.end_time()):
+                    if int(self.start_time()) <= sale_time <= int(self.end_time()):
                         self.run(abs(float(str(current_data))), bongPlus, True, bongFlag, str(sale_time), self.checkbox())
+                    else:
+                        self.disconnect()
                 else:
                     self.run(abs(float(str(current_data))), bongPlus, True, bongFlag, str(sale_time), self.checkbox())
 
