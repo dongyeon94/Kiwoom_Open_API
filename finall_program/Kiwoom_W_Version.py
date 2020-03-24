@@ -1,4 +1,3 @@
-
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QAxContainer import *
@@ -170,10 +169,13 @@ class MyWindow(QMainWindow):
                 self.stock_buy_order(pri)
             transaction_flag = False
 
-    def get_transaction_data_debug(self, price, type_buy):
+
+    def get_transaction_data_debug(self, price, type_buy, sale_time, bongP):
+        global transaction_flag
         print('test중')
         ll_append(Transaction(type_buy, price, numBought))
         transaction_flag = False
+        print(str(sale_time) + ',' + str(True) + ',' + str(price) + ',' + str(bongP))
 
 
     def debug_check_fun(self):
@@ -274,8 +276,8 @@ class MyWindow(QMainWindow):
                 elif bongPlus < 0:
                     curr.bongP -= 1
                 if curr.type == type_buy:
-                    if curr.bongP == -1 and curr.bongCount == 1:
-                        # Option3: 매수진입 직후 마이너스 봉일때 바로 팜
+                    if curr.bongP == -1 and curr.bongCount == 2:
+                        # Option3: 매수진입 직후 마이너스 봉일때 바로 팜 (진입한 봉은 무시)
                         if self.debug_check_fun() is False:
                             self.stock_buy_wait()
                             self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
@@ -286,8 +288,8 @@ class MyWindow(QMainWindow):
                         remove_elem(curr)
                         total += (price - curr.price) * numBought
                 else:
-                    if curr.bongP == 1 and curr.bongCount == 1:
-                        # Option3_reverse: 매도진입 직후 플러스 봉일때 바로 팜
+                    if curr.bongP == 1 and curr.bongCount == 2:
+                        # Option3_reverse: 매도진입 직후 플러스 봉일때 바로 팜 (진입한 봉은 무시)
                         if self.debug_check_fun() is False:
                             self.stock_sale_wait()
                             self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
@@ -321,9 +323,8 @@ class MyWindow(QMainWindow):
                             self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
                                 bongP))
                         else:
-                            print(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
-                                bongP))
-                            self.get_transaction_data_debug(price, 2)
+                            print(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP))
+                            self.get_transaction_data_debug(price, 2, sale_time, bongP)
                         # ll_append(Transaction(type_buy, price, numBought))
                 elif option[1] == '1' and bongP >= 3:
                     if bongPlus < 0:
@@ -338,9 +339,8 @@ class MyWindow(QMainWindow):
                             self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
                                 bongP))
                         else:
-                            print(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
-                                bongP))
-                            self.get_transaction_data_debug(price, 1)
+                            print(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP))
+                            self.get_transaction_data_debug(price, 1, sale_time, bongP)
                         # ll_append(Transaction(type_sell, price, numBought))
                 if bongPlus > 0:
                     if bongP > 0:
