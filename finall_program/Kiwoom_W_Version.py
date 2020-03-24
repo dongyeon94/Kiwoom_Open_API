@@ -176,7 +176,6 @@ class MyWindow(QMainWindow):
         transaction_flag = False
 
 
-
     def debug_check_fun(self):
         if self.debug_check.isChecked():
             return True
