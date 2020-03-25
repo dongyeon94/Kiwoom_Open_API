@@ -139,9 +139,8 @@ class MyWindow(QMainWindow):
         test_.move(20, 600)
         test_.clicked.connect(self.get_transaction_data)
 
-        self.account.setText('7009039772')
+
         self.stoct_code.setText('CLK20')
-        self.password.setText('0000')
         self.stoct_num.setText('1')
 
 
@@ -160,12 +159,16 @@ class MyWindow(QMainWindow):
             print('test중')
             price = float(self.kiwoom.GetChejanData(910))
             type_buy = int(self.kiwoom.GetChejanData(907))
+            sale_time = int(self.kiwoom.GetChejanData(908))
+
             ll_append(Transaction(type_buy, price, numBought))
             if type_buy == 2:
                 pri = round(price + 0.03, 2)
+                self.log_file.write(str(sale_time) + ',' + str(True) + ',_,' + str(0) + + "," + str(price) + '에 매수 진입,' + str(pri) + '에 매도 예약\n')
                 self.stock_sale_order(pri)
             else:
                 pri = round(price - 0.03, 2)
+                self.log_file.write(str(sale_time) + ',' + str(True) + ',_,' + str(0) + + "," + str(price) + '에 매도 진입,' + str(pri) + '에 매수 예약\n')
                 self.stock_buy_order(pri)
             transaction_flag = False
 
@@ -315,15 +318,16 @@ class MyWindow(QMainWindow):
                         # 매수진입: bong 3번 내려갔다가 한번 오르면 '삼'
                         transaction_flag = True
                         # pri = round(price + 0.03, 2)
+
                         if self.debug_check_fun() is False:
                             print('매수 진입', price)
                             self.stock_buy_order()
                             # time.sleep(1)
                             # self.stock_sale_order(pri)
-                            self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
-                                bongP))
+                            # self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
+                            #     bongP + '\n'))
                         else:
-                            print(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP))
+                            # print(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP))
                             self.get_transaction_data_debug(price, 2, sale_time, bongP)
                         # ll_append(Transaction(type_buy, price, numBought))
                 elif option[1] == '1' and bongP >= 3:
@@ -336,10 +340,10 @@ class MyWindow(QMainWindow):
                             self.stock_sale_order()
                             # time.sleep(1)
                             # self.stock_buy_order(pri)
-                            self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
-                                bongP))
+                            # self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
+                            #     bongP + '\n'))
                         else:
-                            print(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP))
+                            # print(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP))
                             self.get_transaction_data_debug(price, 1, sale_time, bongP)
                         # ll_append(Transaction(type_sell, price, numBought))
                 if bongPlus > 0:
@@ -461,6 +465,8 @@ class MyWindow(QMainWindow):
             bongFlag = False
             if self.debug_check_fun():
                 tmp_time = int(sRealData[0])
+                if sRealData[2] == '_':
+                    return
                 current_data = float(sRealData[2])
             else:
                 current_data = self.kiwoom.GetCommRealData(sRealType, 10)
