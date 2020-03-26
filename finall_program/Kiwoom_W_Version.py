@@ -144,8 +144,6 @@ class MyWindow(QMainWindow):
         self.password.setText('0000')
         self.stoct_num.setText('1')
 
-
-
     def test1(self):
         print('test22')
         # data = self.test()
@@ -169,14 +167,12 @@ class MyWindow(QMainWindow):
                 self.stock_buy_order(pri)
             transaction_flag = False
 
-
     def get_transaction_data_debug(self, price, type_buy, sale_time, bongP):
         global transaction_flag
         print('test중')
         ll_append(Transaction(type_buy, price, numBought))
         transaction_flag = False
         print(str(sale_time) + ',' + str(True) + ',' + str(price) + ',' + str(bongP))
-
 
     def debug_check_fun(self):
         if self.debug_check.isChecked():
