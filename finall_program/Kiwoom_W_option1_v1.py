@@ -227,13 +227,13 @@ class MyWindow(QMainWindow):
         while curr is not None:
             tickSold = False
             if tickFlag:
-                if price > lastTickPrice:
-                    curr.tickP += 1
-                elif price < lastTickPrice:
-                    curr.tickP -= 1
+                # if price > lastTickPrice:
+                #     curr.tickP += 1
+                # elif price < lastTickPrice:
+                #     curr.tickP -= 1
                 if curr.type == type_buy:
                     # Option2: 매수거래가 3틱이상 올랐을때 매도
-                    if curr.tickP == 3:
+                    if price - curr.price >= 0.03:
                         if self.debug_check_fun() is False:
                             self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
                                 bongP) + ',' + 'opt2_익절 $' + str(curr.price) + '에 매수 후 $' + str(price) + '에 매도\n')
@@ -245,7 +245,7 @@ class MyWindow(QMainWindow):
                         tickSold = True
                         total += (price - curr.price) * numBought
                     # Option4: 매수거래가 6틱이상 하락했을때 매도
-                    elif curr.tickP == -6:
+                    elif price - curr.price <= -0.06:
                         if self.debug_check_fun() is False:
                             self.stock_buy_wait()
                             self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
@@ -258,7 +258,7 @@ class MyWindow(QMainWindow):
                         total += (price - curr.price) * numBought
                 else:
                     # Option2_reverse: 매도거래가 3틱이상 내렸을 때 매도
-                    if curr.tickP == -3:
+                    if price - curr.price <= -0.03:
                         if self.debug_check_fun() is False:
                             self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
                                 bongP) + ',' + 'opt2r_익절 $' + str(curr.price) + '$에 매도 후 $' + str(price) + '에 매수\n')
@@ -269,7 +269,7 @@ class MyWindow(QMainWindow):
                         tickSold = True
                         total += (price - curr.price) * numBought
                     # Option4_reverse: 매도거래가 6틱이상 상승했을때 매도
-                    elif curr.tickP == 6:
+                    elif price - curr.price >= 0.06:
                         if self.debug_check_fun() is False:
                             self.stock_sale_wait()
                             self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
