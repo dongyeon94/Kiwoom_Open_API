@@ -144,6 +144,8 @@ class MyWindow(QMainWindow):
         self.stoct_code.setText('CLK20')
         self.stoct_num.setText('1')
 
+
+
     def test1(self):
         print('test22')
         # data = self.test()
@@ -171,6 +173,7 @@ class MyWindow(QMainWindow):
                 self.stock_buy_order(pri)
             transaction_flag = False
 
+
     def get_transaction_data_debug(self, price, type_buy, sale_time, bongP):
         global transaction_flag
         print('test중')
@@ -182,6 +185,7 @@ class MyWindow(QMainWindow):
         else:
             pri = round(price - 0.03, 2)
             print(str(sale_time) + ',' + str(True) + ',' + str(price) + ',' + str(bongP) + "," + str(price) + '에 매도 진입,' + str(pri) + '에 매수 예약')
+
 
     def debug_check_fun(self):
         if self.debug_check.isChecked():
