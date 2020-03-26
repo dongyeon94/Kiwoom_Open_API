@@ -154,7 +154,7 @@ class MyWindow(QMainWindow):
         # print(data)
 
     def get_transaction_data(self, sGubun, nItemCnt):
-        global transaction_flag
+        global transaction_flag,type_buy, type_sell
 
         # 매수 2 매도 1
         if sGubun == '1' and transaction_flag:
@@ -165,16 +165,26 @@ class MyWindow(QMainWindow):
             print(price,':',type_tran,';',sale_time)
             print(type(price), ':', type(type_tran), ';', type(sale_time))
             ll_append(Transaction(type_tran, price, numBought))
+            print('1')
             if type_tran == type_buy:
+                print('2')
                 pri = round(price + 0.03, 2)
-                self.log_file.write(str(sale_time) + ',' + str(True) + ',_,' + str(0) + + "," + str(price) + '에 매수 진입,' + str(pri) + '에 매도 예약\n')
+                print('3')
+                self.log_file.write(str(sale_time) + ',' + str(True) + ',_,' + str(0) + "," + str(price) + ',에 매수 진입,' + str(pri) + '에 매도 예약\n')
+                print('4')
                 self.stock_sale_order(pri)
+                print('5')
             else:
+                print('2')
                 pri = round(price - 0.03, 2)
-                self.log_file.write(str(sale_time) + ',' + str(True) + ',_,' + str(bongP) + "," + str(price) + '에 매도 진입,' + str(pri) + '에 매수 예약\n')
+                print('3')
+                self.log_file.write(str(sale_time) + ',' + str(True) + ',_,' + str(0) + "," + str(price) + ',에 매도 진입,' + str(pri) + '에 매수 예약\n')
+                print('4')
                 self.stock_buy_order(pri)
+                print('5')
             transaction_flag = False
 
+            print('6')
 
     def get_transaction_data_debug(self, price, typeIn, sale_time, bongP):
         global transaction_flag

@@ -92,12 +92,13 @@ class MyWindow(QMainWindow):
         self.get_gain.move(200,400)
         self.get_gain.resize(100,15)
         self.get_gain.setPlaceholderText('익절')
-        
+        # self.get_gain.text()
+
         self.get_loss = QLineEdit(self)
         self.get_loss.move(200,415)
         self.get_loss.resize(100,15)
         self.get_loss.setPlaceholderText('손절')
-
+        # self.get_loss.text()
 
         # 디버깅 모드
         self.debug_check = QCheckBox('디버깅모드', self)
