@@ -1,7 +1,7 @@
 
 import sys
 from PyQt5.QtWidgets import *
-# from PyQt5.QAxContainer import *
+from PyQt5.QAxContainer import *
 from PyQt5.QtCore import pyqtSlot, QTimer, QObject, QThread, QTime
 import datetime
 import time
@@ -46,7 +46,7 @@ class MyWindow(QMainWindow):
 
         self.setWindowTitle("PyStock")
         self.setGeometry(300, 150, 400, 800)
-        # self.kiwoom = QAxWidget("KFOpenAPI.KFOpenAPICtrl.1")
+        self.kiwoom = QAxWidget("KFOpenAPI.KFOpenAPICtrl.1")
 
         # 입력 기능 정리
         self.account = QLineEdit(self)
@@ -129,8 +129,8 @@ class MyWindow(QMainWindow):
         sale_btn.clicked.connect(self.stock_sale_order)
 
         # 데이터 수신 이벤트
-        # self.kiwoom.OnReceiveTrData.connect(self.receive_trdata)
-        # self.kiwoom.OnReceiveChejanData.connect(self.get_transaction_data)
+        self.kiwoom.OnReceiveTrData.connect(self.receive_trdata)
+        self.kiwoom.OnReceiveChejanData.connect(self.get_transaction_data)
 
 
 
