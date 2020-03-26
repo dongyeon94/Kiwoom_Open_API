@@ -87,6 +87,18 @@ class MyWindow(QMainWindow):
         self.endtime.move(200, 320)
         self.endtime.setTime(QTime(23, 59,59))
 
+
+        self.get_gain = QLineEdit(self)
+        self.get_gain.move(200,400)
+        self.get_gain.resize(100,15)
+        self.get_gain.setPlaceholderText('익절')
+        
+        self.get_loss = QLineEdit(self)
+        self.get_loss.move(200,415)
+        self.get_loss.resize(100,15)
+        self.get_loss.setPlaceholderText('손절')
+
+
         # 디버깅 모드
         self.debug_check = QCheckBox('디버깅모드', self)
         self.debug_check.move(200, 600)
@@ -103,7 +115,7 @@ class MyWindow(QMainWindow):
 
         # 시작
         module_start = QPushButton('거래 시작', self)
-        module_start.move(200, 450)
+        module_start.move(200, 500)
         module_start.clicked.connect(self.data_loading)
 
         # 로그인
@@ -144,6 +156,8 @@ class MyWindow(QMainWindow):
         self.stoct_code.setText('CLK20')
         self.stoct_num.setText('1')
 
+
+
     def test1(self):
         print('test22')
         # data = self.test()
@@ -157,31 +171,34 @@ class MyWindow(QMainWindow):
         if sGubun == '1' and transaction_flag:
             print('test중')
             price = float(self.kiwoom.GetChejanData(910))
-            type_buy = int(self.kiwoom.GetChejanData(907))
+            type_tran = int(self.kiwoom.GetChejanData(907))
             sale_time = int(self.kiwoom.GetChejanData(908))
-
-            ll_append(Transaction(type_buy, price, numBought))
-            if type_buy == 2:
+            print(price,':',type_tran,';',sale_time)
+            print(type(price), ':', type(type_tran), ';', type(sale_time))
+            ll_append(Transaction(type_tran, price, numBought))
+            if type_tran == type_buy:
                 pri = round(price + 0.03, 2)
                 self.log_file.write(str(sale_time) + ',' + str(True) + ',_,' + str(0) + + "," + str(price) + '에 매수 진입,' + str(pri) + '에 매도 예약\n')
                 self.stock_sale_order(pri)
             else:
                 pri = round(price - 0.03, 2)
-                self.log_file.write(str(sale_time) + ',' + str(True) + ',_,' + str(0) + "," + str(price) + '에 매도 진입,' + str(pri) + '에 매수 예약\n')
+                self.log_file.write(str(sale_time) + ',' + str(True) + ',_,' + str(bongP) + "," + str(price) + '에 매도 진입,' + str(pri) + '에 매수 예약\n')
                 self.stock_buy_order(pri)
             transaction_flag = False
 
-    def get_transaction_data_debug(self, price, type_buy, sale_time, bongP):
+
+    def get_transaction_data_debug(self, price, typeIn, sale_time, bongP):
         global transaction_flag
         print('test중')
         ll_append(Transaction(type_buy, price, numBought))
         transaction_flag = False
-        if type_buy == type_buy:
+        if typeIn == type_buy:
             pri = round(price + 0.03, 2)
             print(str(sale_time) + ',' + str(True) + ',' + str(price) + ',' + str(bongP) + "," + str(price) + '에 매수 진입,' + str(pri) + '에 매도 예약')
         else:
             pri = round(price - 0.03, 2)
             print(str(sale_time) + ',' + str(True) + ',' + str(price) + ',' + str(bongP) + "," + str(price) + '에 매도 진입,' + str(pri) + '에 매수 예약')
+
 
     def debug_check_fun(self):
         if self.debug_check.isChecked():
