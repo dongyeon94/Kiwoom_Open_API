@@ -45,7 +45,7 @@ class MyWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("PyStock")
-        self.setGeometry(300, 150, 400, 800)
+        self.setGeometry(50, 50, 400, 800)
         self.kiwoom = QAxWidget("KFOpenAPI.KFOpenAPICtrl.1")
 
         # 입력 기능 정리
@@ -87,15 +87,27 @@ class MyWindow(QMainWindow):
         self.endtime.move(200, 320)
         self.endtime.setTime(QTime(23, 59,59))
 
-        self.get_gain = QLineEdit(self)
-        self.get_gain.move(200, 400)
-        self.get_gain.resize(100, 15)
-        self.get_gain.setPlaceholderText('익절')
+        self.gain_text = QLabel(self)
+        self.gain_text.move(200,400)
+        self.gain_text.setText('익절')
+        self.gain_text.resize(30,20)
 
-        self.get_loss = QLineEdit(self)
-        self.get_loss.move(200, 415)
-        self.get_loss.resize(100, 15)
-        self.get_loss.setPlaceholderText('손절')
+        self.get_gain = QComboBox(self)
+        self.get_gain.move(230, 400)
+        self.get_gain.resize(100, 20)
+        self.get_gain.addItems([str(i) for i in range(1, 101)])
+
+        self.loss_text =QLabel(self)
+        self.loss_text.move(200,425)
+        self.loss_text.setText('손절')
+        self.loss_text.resize(30,20)
+
+        self.get_loss = QComboBox(self)
+        self.get_loss.move(230, 425)
+        self.get_loss.resize(100, 20)
+        self.get_loss.addItems([str(i) for i in range(1, 101)])
+
+
 
 
         # 디버깅 모드
@@ -149,7 +161,7 @@ class MyWindow(QMainWindow):
 
         test_ = QPushButton(' 테스트', self)
         test_.move(20, 600)
-        test_.clicked.connect(self.get_transaction_data)
+        test_.clicked.connect(self.test1)
 
 
         self.stoct_code.setText('CLK20')
@@ -159,6 +171,7 @@ class MyWindow(QMainWindow):
 
     def test1(self):
         print('test22')
+        print(self.combobo.currentText())
         # data = self.test()
         # data = self.kiwoom.OnReceiveChejanData.connect(self.test)
         # print(data)
@@ -168,7 +181,7 @@ class MyWindow(QMainWindow):
 
         # 매수 2 매도 1
         if sGubun == '1' and transaction_flag:
-            print('test중')
+            print('예약중')
             price = float(self.kiwoom.GetChejanData(910))
             type_tran = int(self.kiwoom.GetChejanData(907))
             sale_time = int(self.kiwoom.GetChejanData(908))
@@ -176,11 +189,11 @@ class MyWindow(QMainWindow):
             print(type(price), ':', type(type_tran), ';', type(sale_time))
             ll_append(Transaction(type_tran, price, numBought, sale_time))
             if type_tran == type_buy:
-                pri = round(price + 0.03, 2)
+                pri = round(price + 0.01*int(self.get_gain.currentText()) , 2)
                 self.log_file.write(str(sale_time) + ',' + str(True) + ',_,' + str(0) + "," + str(price) + ',에 매수 진입,' + str(pri) + '에 매도 예약\n')
                 self.stock_sale_order(pri)
             else:
-                pri = round(price - 0.03, 2)
+                pri = round(price - 0.01*int(self.get_gain.currentText()) , 2)
                 self.log_file.write(str(sale_time) + ',' + str(True) + ',_,' + str(0) + "," + str(price) + ',에 매도 진입,' + str(pri) + '에 매수 예약\n')
                 self.stock_buy_order(pri)
             transaction_flag = False
@@ -243,7 +256,7 @@ class MyWindow(QMainWindow):
                 #     curr.tickP -= 1
                 if curr.type == type_buy:
                     # Option2: 매수거래가 3틱이상 올랐을때 매도
-                    if price - curr.price >= 0.03:
+                    if price - curr.price >= 0.01*int(self.get_gain.currentText()):
                         if self.debug_check_fun() is False:
                             self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
                                 bongP) + ',' + 'opt2_익절 ' + str(curr.tran_time) + '에 $' + str(curr.price) + '에 매수 후 $' + str(price) + '에 매도\n')
@@ -255,7 +268,7 @@ class MyWindow(QMainWindow):
                         tickSold = True
                         total += (price - curr.price) * numBought
                     # Option4: 매수거래가 6틱이상 하락했을때 매도
-                    elif price - curr.price <= -0.06:
+                    elif price - curr.price <= -0.01*int(self.get_loss.currentText()):
                         if self.debug_check_fun() is False:
                             self.stock_buy_wait()
                             self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
@@ -268,7 +281,7 @@ class MyWindow(QMainWindow):
                         total += (price - curr.price) * numBought
                 else:
                     # Option2_reverse: 매도거래가 3틱이상 내렸을 때 매도
-                    if price - curr.price <= -0.03:
+                    if price - curr.price <= -0.01*int(self.get_gain.currentText()):
                         if self.debug_check_fun() is False:
                             self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
                                 bongP) + ',' + 'opt2r_익절 ' + str(curr.tran_time) + '에 $' + str(curr.price) + '$에 매도 후 $' + str(price) + '에 매수\n')
@@ -279,7 +292,7 @@ class MyWindow(QMainWindow):
                         tickSold = True
                         total += (price - curr.price) * numBought
                     # Option4_reverse: 매도거래가 6틱이상 상승했을때 매도
-                    elif price - curr.price >= 0.06:
+                    elif price - curr.price >= 0.01*int(self.get_loss.currentText()):
                         if self.debug_check_fun() is False:
                             self.stock_sale_wait()
                             self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
