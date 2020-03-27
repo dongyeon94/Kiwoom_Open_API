@@ -120,13 +120,13 @@ class MyWindow(QMainWindow):
         search_btm.move(20, 170)
         search_btm.clicked.connect(self.subject_search)
 
-        buy_btn = QPushButton('매수버튼', self)
-        buy_btn.move(20, 270)
-        buy_btn.clicked.connect(self.stock_buy_order)
+        self.buy_btn = QPushButton('매수버튼', self)
+        self.buy_btn.move(20, 270)
+        self.buy_btn.clicked.connect(self.stock_buy_order)
 
-        sale_btn = QPushButton('매도 버튼', self)
-        sale_btn.move(20, 320)
-        sale_btn.clicked.connect(self.stock_sale_order)
+        self.sale_btn = QPushButton('매도 버튼', self)
+        self.sale_btn.move(20, 320)
+        self.sale_btn.clicked.connect(self.stock_sale_order)
 
         # 데이터 수신 이벤트
         self.kiwoom.OnReceiveTrData.connect(self.receive_trdata)
@@ -139,7 +139,7 @@ class MyWindow(QMainWindow):
 
         test_ = QPushButton(' 테스트', self)
         test_.move(20, 600)
-        test_.clicked.connect(self.get_transaction_data)
+        test_.clicked.connect(self.test1)
 
 
         self.stoct_code.setText('CLK20')
@@ -152,9 +152,21 @@ class MyWindow(QMainWindow):
         # data = self.test()
         # data = self.kiwoom.OnReceiveChejanData.connect(self.test)
         # print(data)
+        self.stock_sale_order(30.00)
 
     def get_transaction_data(self, sGubun, nItemCnt):
         global transaction_flag, type_buy, type_sell
+        if sGubun=='0':
+            print('예약..?')
+            price = self.kiwoom.GetChejanData(9203)
+            print(1)
+            type_tran = int(self.kiwoom.GetChejanData(907))
+            print(2)
+            sale_time = int(self.kiwoom.GetChejanData(908)[3:-2])
+            print(3)
+            print(price, ':', type_tran, ';', sale_time)
+            print(type(price), ':', type(type_tran), ';', type(sale_time))
+
 
         # 매수 2 매도 1
         if sGubun == '1' and transaction_flag:
