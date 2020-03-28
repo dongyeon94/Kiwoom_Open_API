@@ -156,22 +156,28 @@ class MyWindow(QMainWindow):
 
     def get_transaction_data(self, sGubun, nItemCnt):
         global transaction_flag, type_buy, type_sell, numBought, head
-        # 예약 받아옴
-        if sGubun=='0':
-            price = float(self.kiwoom.GetChejanData(910))
-            transaction_id = self.kiwoom.GetChejanData(9203)[6:]
-            type_tran = int(self.kiwoom.GetChejanData(907))
-            sale_time = int(self.kiwoom.GetChejanData(908)[3:-2])
-            #TODO: ADD ID
-            ll_append(Transaction(type_tran, price, numBought, sale_time, transaction_id))
-            # print(price, ':', type_tran, ';', sale_time)
-            # print(type(price), ':', type(type_tran), ';', type(sale_time))
+
+    # 예약 받아옴
+        if sGubun == '0':
+            price = float(self.kiwoom.GetChejanData(13330))
+            tran = int(self.kiwoom.GetChejanData(905))
+            if price != 0 and tran != 3:
+                #예약과 시가를 구분
+                transaction_id = self.kiwoom.GetChejanData(9203)[6:]
+                type_tran = int(self.kiwoom.GetChejanData(907))
+                sale_time = int(self.kiwoom.GetChejanData(908)[3:-2])
+                if type_tran == type_buy:
+                    price = round(price - 0.03, 2)
+                else:
+                    price = round(price + 0.03, 2)
+                ll_append(Transaction(type_tran, price, numBought, sale_time, transaction_id))
         # 매수 2 매도 1
         # 거래 체결된 경우
         if sGubun == '1':
             #경우1: 새로 산 후 예약 거는 경우
             if transaction_flag:
                 type_tran = int(self.kiwoom.GetChejanData(907))
+                price = float(self.kiwoom.GetChejanData(910))
                 sale_time = int(self.kiwoom.GetChejanData(908))
                 if type_tran == type_buy:
                     pri = round(price + 0.03, 2)
@@ -214,13 +220,15 @@ class MyWindow(QMainWindow):
                                         curr.price) + '$에 매도 후 $' + str(price) + '에 매수')
                             break
                         curr = curr.next
+
                 elif tran == 23:
-                    #손절 경우: 예약 취소 완료, 시가로 팔기
+                    # 손절 경우: 예약 취소 완료, 시가로 팔기
                     type_tran = int(self.kiwoom.GetChejanData(907))
-                    if type_tran == type_buy:
+                    if type_tran == type_sell:
                         self.stock_sale_order()
                     else:
                         self.stock_buy_order()
+
 
     def get_transaction_data_debug(self, price, typeIn, sale_time, bongP):
         global transaction_flag, type_buy
