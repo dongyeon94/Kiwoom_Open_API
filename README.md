@@ -11,3 +11,10 @@
   - PyQt5
  
  
+# develope environment
+ - pycharm
+ - 32bit anaconda
+   - active conda prompt 
+   - set CONDA_FORCE_32BIT=1  conda create -n py37_32 python=3.7 anaconda
+ - pycharm enviroment
+ - set configure interpreter
