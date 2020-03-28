@@ -3,9 +3,11 @@
 # 개발 환경
   - Pycharm
   - Anaconda 
+  
 # Set Library
-  - 키움 open api w 모듈
-  - 키움 open api 모듈
+  - kiwoom open api w module
+  - kiwoom open api+  module 
   - Python 32bit
   - PyQt5
+ 
  
