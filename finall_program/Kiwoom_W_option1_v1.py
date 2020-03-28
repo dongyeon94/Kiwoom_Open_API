@@ -541,10 +541,7 @@ class MyWindow(QMainWindow):
             if bongPlus is not None:
                 sale_time = tmp_time
                 if self.debug_check_fun() is False:
-                    if int(self.start_time()) <= sale_time <= int(self.end_time()):
-                        self.run(abs(float(str(current_data))), bongPlus, True, bongFlag, str(sale_time), self.checkbox())
-                    else:
-                        self.disconnect()
+                    self.run(abs(float(str(current_data))), bongPlus, True, bongFlag, str(sale_time), self.checkbox())
                 else:
                     self.run(abs(float(str(current_data))), bongPlus, True, bongFlag, str(sale_time), self.checkbox())
 
