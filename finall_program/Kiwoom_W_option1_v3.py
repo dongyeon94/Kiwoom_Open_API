@@ -97,7 +97,7 @@ class MyWindow(QMainWindow):
         self.get_gain.move(230, 400)
         self.get_gain.resize(100, 20)
         self.get_gain.addItems([str(i) for i in range(1, 101)])
-
+        # 손절
         self.loss_text =QLabel(self)
         self.loss_text.move(200,425)
         self.loss_text.setText('손절')
