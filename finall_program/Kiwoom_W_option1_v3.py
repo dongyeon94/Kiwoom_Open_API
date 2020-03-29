@@ -387,15 +387,15 @@ class MyWindow(QMainWindow):
                         # pri = round(price + 0.03, 2)
 
                         if self.debug_check_fun() is False:
-                            print('매수 진입', price)
-                            self.stock_buy_order()
+                            print('기존매수 진입-> 매도진입', price)
+                            self.stock_sale_order()
                             # time.sleep(1)
                             # self.stock_sale_order(pri)
                             # self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
                             #     bongP + '\n'))
                         else:
                             # print(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP))
-                            self.get_transaction_data_debug(price, type_buy, sale_time, bongP)
+                            self.get_transaction_data_debug(price, type_sell, sale_time, bongP)
                         # ll_append(Transaction(type_buy, price, numBought, sale_time))
                 elif option[1] == '1' and bongP >= 3:
                     if bongPlus < 0:
@@ -403,15 +403,15 @@ class MyWindow(QMainWindow):
                         # 매도진입: bong 3번 올랐다가 한번 내리면 삼
                         # pri = round(price - 0.03, 2)
                         if self.debug_check_fun() is False:
-                            print('매도 진입', price)
-                            self.stock_sale_order()
+                            print('기존매도 진입-> 매수 진입', price)
+                            self.stock_buy_order()
                             # time.sleep(1)
                             # self.stock_buy_order(pri)
                             # self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
                             #     bongP + '\n'))
                         else:
                             # print(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(bongP))
-                            self.get_transaction_data_debug(price, type_sell, sale_time, bongP)
+                            self.get_transaction_data_debug(price, type_buy, sale_time, bongP)
                         # ll_append(Transaction(type_sell, price, numBought, sale_time))
                 if bongPlus > 0:
                     if bongP > 0:
