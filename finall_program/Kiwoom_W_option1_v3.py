@@ -87,6 +87,7 @@ class MyWindow(QMainWindow):
         self.endtime.move(200, 320)
         self.endtime.setTime(QTime(23, 59,59))
 
+        # 손절 익절 받는 부분
         self.gain_text = QLabel(self)
         self.gain_text.move(200,400)
         self.gain_text.setText('익절')
@@ -106,7 +107,6 @@ class MyWindow(QMainWindow):
         self.get_loss.move(230, 425)
         self.get_loss.resize(100, 20)
         self.get_loss.addItems([str(i) for i in range(1, 101)])
-
 
 
         # 디버깅 모드
