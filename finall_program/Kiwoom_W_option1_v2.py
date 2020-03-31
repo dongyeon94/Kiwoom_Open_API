@@ -170,7 +170,10 @@ class MyWindow(QMainWindow):
 
     def test1(self):
         print('test22')
+        print(self.get_loss.currentText())
+        print(type(self.get_loss.currentText()))
         # data = self.test()
+
         # data = self.kiwoom.OnReceiveChejanData.connect(self.test)
         # print(data)
 
@@ -187,14 +190,15 @@ class MyWindow(QMainWindow):
                 transaction_id = self.kiwoom.GetChejanData(9203)[6:]
                 type_tran = int(self.kiwoom.GetChejanData(907))
                 sale_time = int(self.kiwoom.GetChejanData(908)[3:-2])
+
                 if type_tran == type_buy:
                     type_tran = type_sell
-                    #매도 후 낮아진 가격에 매수
-                    price = round(price + 0.01*int(self.get_gain.currentData()), 2)
+                    price = round(price + 0.01*int(self.get_gain.currentText()), 2)
+                    print('매도 진입', price)
                 else:
                     type_tran = type_buy
-                    #매수 후 높아진 가격에 매도
-                    price = round(price - 0.01*int(self.get_gain.currentData()), 2)
+                    price = round(price - 0.01*int(self.get_gain.currentText()), 2)
+                    print('매수 진입', price)
                 ll_append(Transaction(type_tran, price, numBought, sale_time, transaction_id))
         # 매수 2 매도 1
         # 거래 체결된 경우
@@ -205,11 +209,11 @@ class MyWindow(QMainWindow):
                 price = float(self.kiwoom.GetChejanData(910))
                 sale_time = int(self.kiwoom.GetChejanData(908))
                 if type_tran == type_buy:
-                    pri = round(price + 0.01*int(self.get_gain.currentData()), 2)
+                    pri = round(price + 0.01*int(self.get_gain.currentText()), 2)
                     self.log_file.write(str(sale_time) + ',' + str(True) + ',_,' + str(0) + "," + str(price) + ',에 매수 진입,' + str(pri) + '에 매도 예약\n')
                     self.stock_sale_order(pri)
                 else:
-                    pri = round(price - 0.01*int(self.get_gain.currentData()), 2)
+                    pri = round(price - 0.01*int(self.get_gain.currentText()), 2)
                     self.log_file.write(str(sale_time) + ',' + str(True) + ',_,' + str(0) + "," + str(price) + ',에 매도 진입,' + str(pri) + '에 매수 예약\n')
                     self.stock_buy_order(pri)
                 transaction_flag = False
@@ -264,10 +268,10 @@ class MyWindow(QMainWindow):
         ll_append(Transaction(typeIn, price, numBought, sale_time, '디버깅'))
         transaction_flag = False
         if typeIn == type_buy:
-            pri = round(price + 0.01*int(self.get_gain.currentData()), 2)
+            pri = round(price + 0.01*int(self.get_gain.currentText()), 2)
             print(str(sale_time) + ',' + str(True) + ',' + str(price) + ',' + str(bongP) + "," + str(price) + ',에 매수 진입,' + str(pri) + '에 매도 예약')
         else:
-            pri = round(price - 0.01*int(self.get_gain.currentData()), 2)
+            pri = round(price - 0.01*int(self.get_gain.currentText()), 2)
             print(str(sale_time) + ',' + str(True) + ',' + str(price) + ',' + str(bongP) + "," + str(price) + ',에 매도 진입,' + str(pri) + '에 매수 예약')
 
 
@@ -307,16 +311,10 @@ class MyWindow(QMainWindow):
 
         curr = head
         while curr is not None:
-            tickSold = False
             if tickFlag:
-                # if price > lastTickPrice:
-                #     curr.tickP += 1
-                # elif price < lastTickPrice:
-                #     curr.tickP -= 1
                 if curr.type == type_buy:
                     # Option4: 매수거래가 6틱이상 하락했을때 매도
-
-                    if price - curr.price <= -0.01*int(self.get_loss.currentData()):
+                    if price - curr.price <= -0.01*int(self.get_loss.currentText()):
                         if self.debug_check_fun() is False:
                             self.stock_sale_modify(curr.id)
                             # self.stock_buy_wait()
@@ -328,11 +326,10 @@ class MyWindow(QMainWindow):
                             print(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
                                 bongP) + ',opt4_손절 ' + str(curr.tran_time) + '에 $' + str(curr.price) + '에 매수 후 $' + str(price) + '에 매도')
                         remove_elem(curr)
-                        tickSold = True
                         total += (price - curr.price) * numBought
                 else:
                     # Option4_reverse: 매도거래가 6틱이상 상승했을때 매도
-                    if price - curr.price >= 0.01*int(self.get_loss.currentData()):
+                    if price - curr.price >= 0.01*int(self.get_loss.currentText()):
                         if self.debug_check_fun() is False:
                             # self.stock_sale_wait()
                             self.stock_buy_modify(curr.id)
@@ -344,48 +341,8 @@ class MyWindow(QMainWindow):
                             print(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
                                 bongP) + ',opt4r_손절 ' + str(curr.tran_time) + '에 $' + str(curr.price) + '에 매도 후 $' + str(price) + '에 매수')
                         remove_elem(curr)
-                        tickSold = True
-                        total += (price - curr.price) * numBought
-            if bongFlag and not tickSold:
-                curr.bongCount += 1
-                if bongPlus > 0:
-                    curr.bongP += 1
-                elif bongPlus < 0:
-                    curr.bongP -= 1
-                if curr.type == type_buy:
-                    if curr.bongP == -1 and curr.bongCount == 2:
-                        # Option3: 매수진입 직후 마이너스 봉일때 바로 팜 (진입한 봉은 무시)
-                        if self.debug_check_fun() is False:
-                            # self.stock_buy_wait()
-                            self.stock_sale_modify(curr.id)
-                            # self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
-                            #    bongP) + ',' + 'opt3_손절 ' + '에 $' + '에 매수 후 $' + str(price) + '에 매도\n')
-                            self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
-                                bongP) + ',opt3_손절 ' + str(curr.tran_time) + '에 $' + str(curr.price) + '에 매수 후 $' + str(price) + '에 매도\n')
-                        else:
-                            # print(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
-                            #     bongP) + ',opt3_손절 ' + str(curr.tran_time) + '에 $' + '에 매수 후 $' + str(price) + '에 매도')
-                            print(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
-                                bongP) + ',opt3_손절 ' + str(curr.tran_time) + '에 $' + str(curr.price) + '에 매수 후 $' + str(price) + '에 매도')
-                        remove_elem(curr)
-                        total += (price - curr.price) * numBought
-                else:
-                    if curr.bongP == 1 and curr.bongCount == 2:
-                        # Option3_reverse: 매도진입 직후 플러스 봉일때 바로 팜 (진입한 봉은 무시)
-                        if self.debug_check_fun() is False:
-                            # self.stock_sale_wait()
-                            self.stock_buy_modify(curr.id)
-                            # self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
-                            #     bongP) + ',' + 'opt3r_손절 ' +  '에 $' +  '에 매도 후 $' + str(price) + '에 매수\n')
-                            self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
-                                bongP) + ',opt3r_손절 ' + str(curr.tran_time) + '에 $' + str(curr.price) + '에 매도 후 $' + str(price) + '에 매수\n')
-                        else:
-                            print(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
-                            bongP) + ',opt3r_손절 ' + str(curr.tran_time) + '에 $' + str(curr.price) + '에 매도 후 $' + str(price) + '에 매수')
-                        remove_elem(curr)
                         total += (price - curr.price) * numBought
             curr = curr.next
-
         if bongFlag:
             if bongP is None:
                 if bongPlus > 0:
@@ -402,7 +359,7 @@ class MyWindow(QMainWindow):
                         # pri = round(price + 0.03, 2)
 
                         if self.debug_check_fun() is False:
-                            print('매수 진입', price)
+
                             self.stock_buy_order()
                             # time.sleep(1)
                             # self.stock_sale_order(pri)
@@ -418,7 +375,7 @@ class MyWindow(QMainWindow):
                         # 매도진입: bong 3번 올랐다가 한번 내리면 삼
                         # pri = round(price - 0.03, 2)
                         if self.debug_check_fun() is False:
-                            print('매도 진입', price)
+
                             self.stock_sale_order()
                             # time.sleep(1)
                             # self.stock_buy_order(pri)
