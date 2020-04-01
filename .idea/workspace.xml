@@ -1,31 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fc67eac2-bb02-4ba4-8a48-2d499274f311" name="Default Changelist" comment="" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <list default="true" id="fc67eac2-bb02-4ba4-8a48-2d499274f311" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Module/log20200401145105_bong.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Module/log20200401145105_tick.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Module/log20200401145105_거래.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/finall_program/Kiwoom_W_option1_v4.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/kiwoom_api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/kiwoom_api.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/finall_program/Kiwoom_W_option1_v3.py" beforeDir="false" afterPath="$PROJECT_DIR$/finall_program/Kiwoom_W_option1_v3.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="ProjectId" id="1YcNK4xsXBOiA5EFh7wUeXLu8je" />
-  <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
       <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
+        <option value="Python Script" />
       </list>
     </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="C:\Users\한\Desktop\혜원 외주\Kiwoom_Open_API\.idea" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectId" id="1Zvfe9MbhJqEbmAyNAi2FYTBfMB" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RunManager">
+    <configuration name="Kiwoom_W_option1_v3" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="kiwoom_api" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Program Files (x86)\Python38-32\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/finall_program" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/finall_program/Kiwoom_W_option1_v3.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.Kiwoom_W_option1_v3" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -33,11 +83,83 @@
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="fc67eac2-bb02-4ba4-8a48-2d499274f311" name="Default Changelist" comment="" />
-      <created>1583237855732</created>
+      <created>1585724580651</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1583237855732</updated>
+      <updated>1585724580651</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="1163" y="159" key="#Kiwoom_W_option1_v3" timestamp="1585725665031">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1163" y="159" key="#Kiwoom_W_option1_v3/0.0.1920.1040@0.0.1920.1040" timestamp="1585725665031" />
+    <state x="828" y="177" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1585724804646">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="828" y="177" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1585724804646" />
+    <state width="935" height="205" key="GridCell.Tab.0.bottom" timestamp="1585767041397">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="935" height="205" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1585767041397" />
+    <state width="935" height="205" key="GridCell.Tab.0.center" timestamp="1585767041397">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="935" height="205" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1585767041397" />
+    <state width="935" height="205" key="GridCell.Tab.0.left" timestamp="1585767041397">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="935" height="205" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1585767041397" />
+    <state width="935" height="205" key="GridCell.Tab.0.right" timestamp="1585767041397">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="935" height="205" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1585767041397" />
+    <state width="935" height="205" key="GridCell.Tab.1.bottom" timestamp="1585767040910">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="935" height="205" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1585767040910" />
+    <state width="935" height="205" key="GridCell.Tab.1.center" timestamp="1585767040910">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="935" height="205" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1585767040910" />
+    <state width="935" height="205" key="GridCell.Tab.1.left" timestamp="1585767040910">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="935" height="205" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1585767040910" />
+    <state width="935" height="205" key="GridCell.Tab.1.right" timestamp="1585767040910">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="935" height="205" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1585767040910" />
+    <state x="926" y="168" key="SettingsEditor" timestamp="1585725671327">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="926" y="168" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1585725671327" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/finall_program/Kiwoom_W_option1_v3.py</url>
+          <line>353</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/finall_program/Kiwoom_W_option1_v3.py</url>
+          <line>188</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
