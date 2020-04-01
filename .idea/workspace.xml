@@ -2,14 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fc67eac2-bb02-4ba4-8a48-2d499274f311" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Module/log20200401145105_bong.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Module/log20200401145105_tick.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Module/log20200401145105_거래.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/finall_program/Kiwoom_W_option1_v4.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/kiwoom_api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/kiwoom_api.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/finall_program/Kiwoom_W_option1_v3.py" beforeDir="false" afterPath="$PROJECT_DIR$/finall_program/Kiwoom_W_option1_v3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/finall_program/Kiwoom_W_option1_v4.py" beforeDir="false" afterPath="$PROJECT_DIR$/finall_program/Kiwoom_W_option1_v4.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/finall_program/log20200402010128_거래.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finall_program/log20200402034922_거래.csv" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,7 +22,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="haewonTestingV3" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -49,7 +45,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.Kiwoom_W_option1_v4">
     <configuration name="Kiwoom_W_option1_v3" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="kiwoom_api" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -71,8 +67,30 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="Kiwoom_W_option1_v4" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="kiwoom_api" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/finall_program" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/finall_program/Kiwoom_W_option1_v4.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Kiwoom_W_option1_v4" />
         <item itemvalue="Python.Kiwoom_W_option1_v3" />
       </list>
     </recent_temporary>
@@ -109,57 +127,77 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="828" y="177" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1585724804646" />
-    <state width="935" height="205" key="GridCell.Tab.0.bottom" timestamp="1585767041397">
+    <state width="1899" height="268" key="GridCell.Tab.0.bottom" timestamp="1585772485053">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="935" height="205" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1585767041397" />
-    <state width="935" height="205" key="GridCell.Tab.0.center" timestamp="1585767041397">
+    <state width="1899" height="268" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1585772485053" />
+    <state width="1899" height="268" key="GridCell.Tab.0.center" timestamp="1585772485052">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="935" height="205" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1585767041397" />
-    <state width="935" height="205" key="GridCell.Tab.0.left" timestamp="1585767041397">
+    <state width="1899" height="268" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1585772485052" />
+    <state width="1899" height="268" key="GridCell.Tab.0.left" timestamp="1585772485052">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="935" height="205" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1585767041397" />
-    <state width="935" height="205" key="GridCell.Tab.0.right" timestamp="1585767041397">
+    <state width="1899" height="268" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1585772485052" />
+    <state width="1899" height="268" key="GridCell.Tab.0.right" timestamp="1585772485052">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="935" height="205" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1585767041397" />
-    <state width="935" height="205" key="GridCell.Tab.1.bottom" timestamp="1585767040910">
+    <state width="1899" height="268" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1585772485052" />
+    <state width="1899" height="268" key="GridCell.Tab.1.bottom" timestamp="1585772484954">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="935" height="205" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1585767040910" />
-    <state width="935" height="205" key="GridCell.Tab.1.center" timestamp="1585767040910">
+    <state width="1899" height="268" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1585772484954" />
+    <state width="1899" height="268" key="GridCell.Tab.1.center" timestamp="1585772484954">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="935" height="205" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1585767040910" />
-    <state width="935" height="205" key="GridCell.Tab.1.left" timestamp="1585767040910">
+    <state width="1899" height="268" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1585772484954" />
+    <state width="1899" height="268" key="GridCell.Tab.1.left" timestamp="1585772484954">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="935" height="205" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1585767040910" />
-    <state width="935" height="205" key="GridCell.Tab.1.right" timestamp="1585767040910">
+    <state width="1899" height="268" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1585772484954" />
+    <state width="1899" height="268" key="GridCell.Tab.1.right" timestamp="1585772484954">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="935" height="205" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1585767040910" />
+    <state width="1899" height="268" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1585772484954" />
     <state x="926" y="168" key="SettingsEditor" timestamp="1585725671327">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="926" y="168" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1585725671327" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1585770807503">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1585770807503" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/finall_program/Kiwoom_W_option1_v3.py</url>
-          <line>353</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/finall_program/Kiwoom_W_option1_v3.py</url>
           <line>188</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/finall_program/Kiwoom_W_option1_v4.py</url>
+          <line>365</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/finall_program/Kiwoom_W_option1_v4.py</url>
+          <line>367</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="bongP" language="Python" />
+        <watch expression="bongPlus" language="Python" />
+        <watch expression="self.list.size" language="Python" />
+        <watch expression="option[0] == '1' and (self.list.size == 0 or self.list.head.type == type_buy)" language="Python" />
+        <watch expression="bongP &lt;= -2 and bongPlus &gt; 0" language="Python" />
+        <watch expression="option[1] == '1' and (self.list.size == 0 or self.list.head.type == type_sell)" language="Python" />
+        <watch expression="bongP &gt;= 2 and bongPlus &lt; 0" language="Python" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>
