@@ -524,7 +524,7 @@ class MyWindow(QMainWindow):
                     startTime = str(tmp_time // 100 + 1)
                     print("프로그램 시작 시간: ", startTime)
                 sale_time = tmp_time
-            if tmp_time // 100 > sale_time // 100 or tmp_time // 100 == 0:
+            if tmp_time // 100 > sale_time // 100 or (sale_time // 100 > 0 and tmp_time // 100 == 0):
                 if bong_start is None:
                     bong_start = abs(float(str(current_data)))
                     bongPlus = 0
