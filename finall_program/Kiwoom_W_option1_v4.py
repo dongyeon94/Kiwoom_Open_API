@@ -301,7 +301,7 @@ class MyWindow(QMainWindow):
                 # elif bongPlus < 0:
                 #     self.list.tail.bongP -= 1
                 if self.list.tail.type == type_buy:
-                    if bongP < 0 and self.list.tail.bongCount == 2:
+                    if bongPlus < 0 and self.list.tail.bongCount == 2:
                         # Option3: 매수진입 직후 마이너스 봉일때 바로 팜 (진입한 봉은 무시)
                         try:
                             if self.debug_check_fun() is False:
@@ -318,7 +318,7 @@ class MyWindow(QMainWindow):
                             pass
                         self.list.remove_elem(self.list.tail)
                 else:
-                    if bongP > 0 and self.list.tail.bongCount == 2:
+                    if bongPlus > 0 and self.list.tail.bongCount == 2:
                         # Option3_reverse: 매도진입 직후 플러스 봉일때 바로 팜 (진입한 봉은 무시)
                         try:
                             if self.debug_check_fun() is False:
