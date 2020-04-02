@@ -338,7 +338,7 @@ class MyWindow(QMainWindow):
                 else:
                     bongP = 0
             else:
-                if bongP <= -2 and bongPlus > 0:
+                if bongP <= -1 and bongPlus > 0:
                     if option[0] == '1' and (self.list.size == 0 or self.list.head.type == type_buy):
                         transaction_flag = True
                         if self.debug_check_fun() is False:
@@ -346,7 +346,7 @@ class MyWindow(QMainWindow):
                             self.stock_buy_order()
                         else:
                             self.get_transaction_data_debug(price, type_buy, sale_time, bongP)
-                elif bongP >= 2 and bongPlus < 0:
+                elif bongP >= 1 and bongPlus < 0:
                     if option[1] == '1' and (self.list.size == 0 or self.list.head.type == type_sell):
                         transaction_flag = True
                         if self.debug_check_fun() is False:
@@ -757,8 +757,8 @@ class DLinkedList:
             self.tail = None
         else:
             if node is self.tail:
-                self.tail = self.tail.prev
                 self.tail.next = None
+                self.tail = self.tail.prev
             elif node is self.head:
                 self.head = node.next
                 node.next.prev = None
