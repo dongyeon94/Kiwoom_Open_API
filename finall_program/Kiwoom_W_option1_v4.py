@@ -185,7 +185,7 @@ class MyWindow(QMainWindow):
                     sale_time = int(self.kiwoom.GetChejanData(908)[3:-2])
                     self.list.ll_append(Transaction(type_tran, price, sale_time, transaction_id))
                 else:
-                    #봉손절
+                    #봉손절(예약취소, 취소거래 아이디 다름)
                     if type_tran == type_sell:
                         self.stock_sale_order()
                     else:
@@ -220,7 +220,7 @@ class MyWindow(QMainWindow):
                     curr = self.list.head
                     while curr is not None:
                         if curr.id == transaction_id:
-                            #손절 or익절 (예약 체결됨)
+                            # OCO손절 or익절 (예약 체결됨)
                             # Opt2, 2r: 매도/수거래가 3틱이상 올랐을때 매도
                             self.list.remove_elem(curr)
                             if curr.type == type_buy:
@@ -751,36 +751,18 @@ class DLinkedList:
         self.tail = None
 
     def remove_elem(self, node):
-        prev = node.prev
-        if node is self.tail:
-            self.tail = node.prev
-        if node.prev:
-            node.prev.next = node.next
-        if node.next:
-            node.next.prev = node.prev
-        if node is self.head:
-            self.head = node.next
-        node.prev = None
-        node.next = None
         self.size -= 1
-
-    def remove_tail(self):
-        if not self.head:
-            return
-        self.size -= 1
-        curr = self.head
-        prev = None
-        while curr:
-            if not curr.next:
-                if prev:
-                    prev.next = curr.next
-                    self.tail = prev
-                else:
-                    # head==tail
-                    self.tail = None
-                    self.head = None
-            prev = curr
-            curr = curr.next
+        if self.head == self.tail:
+            self.head = None
+            self.tail = None
+        else:
+            if node is self.tail:
+                self.tail = self.tail.prev
+                self.tail.next = None
+            else:
+                node.prev.next = node.next
+                node.next.prev = node.prev
+                node = None
 
     def ll_append(self, newNode):
         self.size += 1
