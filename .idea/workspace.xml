@@ -4,6 +4,12 @@
     <list default="true" id="fc67eac2-bb02-4ba4-8a48-2d499274f311" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/finall_program/Kiwoom_W_option1_v4.py" beforeDir="false" afterPath="$PROJECT_DIR$/finall_program/Kiwoom_W_option1_v4.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/finall_program/log20200402052127_거래.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finall_program/log20200402162314_거래.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finall_program/log20200402170013_거래.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finall_program/log20200402172231_거래.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finall_program/log20200402223849_거래.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finall_program/log20200402224925_거래.csv" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,46 +131,46 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="828" y="177" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1585724804646" />
-    <state width="1899" height="268" key="GridCell.Tab.0.bottom" timestamp="1585772485053">
+    <state width="934" height="268" key="GridCell.Tab.0.bottom" timestamp="1585845800567">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="268" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1585772485053" />
-    <state width="1899" height="268" key="GridCell.Tab.0.center" timestamp="1585772485052">
+    <state width="934" height="268" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1585845800567" />
+    <state width="934" height="268" key="GridCell.Tab.0.center" timestamp="1585845800567">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="268" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1585772485052" />
-    <state width="1899" height="268" key="GridCell.Tab.0.left" timestamp="1585772485052">
+    <state width="934" height="268" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1585845800567" />
+    <state width="934" height="268" key="GridCell.Tab.0.left" timestamp="1585845800567">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="268" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1585772485052" />
-    <state width="1899" height="268" key="GridCell.Tab.0.right" timestamp="1585772485052">
+    <state width="934" height="268" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1585845800567" />
+    <state width="934" height="268" key="GridCell.Tab.0.right" timestamp="1585845800567">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="268" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1585772485052" />
-    <state width="1899" height="268" key="GridCell.Tab.1.bottom" timestamp="1585772484954">
+    <state width="934" height="268" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1585845800567" />
+    <state width="934" height="268" key="GridCell.Tab.1.bottom" timestamp="1585845800463">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="268" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1585772484954" />
-    <state width="1899" height="268" key="GridCell.Tab.1.center" timestamp="1585772484954">
+    <state width="934" height="268" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1585845800463" />
+    <state width="934" height="268" key="GridCell.Tab.1.center" timestamp="1585845800463">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="268" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1585772484954" />
-    <state width="1899" height="268" key="GridCell.Tab.1.left" timestamp="1585772484954">
+    <state width="934" height="268" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1585845800463" />
+    <state width="934" height="268" key="GridCell.Tab.1.left" timestamp="1585845800463">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="268" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1585772484954" />
-    <state width="1899" height="268" key="GridCell.Tab.1.right" timestamp="1585772484954">
+    <state width="934" height="268" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1585845800463" />
+    <state width="934" height="268" key="GridCell.Tab.1.right" timestamp="1585845800463">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="268" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1585772484954" />
+    <state width="934" height="268" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1585845800463" />
     <state x="926" y="168" key="SettingsEditor" timestamp="1585725671327">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="926" y="168" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1585725671327" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1585770807503">
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1585844465543">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1585770807503" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1585844465543" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -176,25 +182,14 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/finall_program/Kiwoom_W_option1_v4.py</url>
-          <line>365</line>
-          <option name="timeStamp" value="19" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/finall_program/Kiwoom_W_option1_v4.py</url>
-          <line>367</line>
-          <option name="timeStamp" value="21" />
+          <line>297</line>
+          <option name="timeStamp" value="30" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="bongP" language="Python" />
-        <watch expression="bongPlus" language="Python" />
-        <watch expression="self.list.size" language="Python" />
-        <watch expression="option[0] == '1' and (self.list.size == 0 or self.list.head.type == type_buy)" language="Python" />
-        <watch expression="bongP &lt;= -2 and bongPlus &gt; 0" language="Python" />
-        <watch expression="option[1] == '1' and (self.list.size == 0 or self.list.head.type == type_sell)" language="Python" />
-        <watch expression="bongP &gt;= 2 and bongPlus &lt; 0" language="Python" />
+        <watch expression="self.list.tail" language="Python" />
       </configuration>
     </watches-manager>
   </component>

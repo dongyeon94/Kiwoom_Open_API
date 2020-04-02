@@ -188,8 +188,10 @@ class MyWindow(QMainWindow):
                     #봉손절(예약취소, 취소거래 아이디 다름)
                     if type_tran == type_sell:
                         self.stock_sale_order()
+                        time.sleep(1)
                     else:
                         self.stock_buy_order()
+                        time.sleep(1)
         # 매수 2 매도 1
         # 거래 체결된 경우
         if sGubun == '1':
@@ -204,11 +206,13 @@ class MyWindow(QMainWindow):
                         str(sale_time) + ',' + str(True) + ',_,' + str(0) + "," + str(price) + ',' + str(
                             transaction_id) + ',(id) 매수 진입\n')
                     self.stock_sale_order(price,5)
+                    time.sleep(1)
                 else:
                     self.log_file.write(
                         str(sale_time) + ',' + str(True) + ',_,' + str(0) + "," + str(price) + ',' + str(
                             transaction_id) + ',(id) 매도 진입\n')
                     self.stock_buy_order(price,5)
+                    time.sleep(1)
                 transaction_flag = False
             # #경우2: 익절(예약) or 손절(시가) 거래 체결
             else:
@@ -233,7 +237,6 @@ class MyWindow(QMainWindow):
                                     curr.price) + '$에 매도 후 $' + str(price) + '에 매수\n')
                             break
                         curr = curr.next
-
                 # if tran == 23:
                 #     # 봉손절 case: 예약 취소 완료, 시가로 팔기
                 #     type_tran = int(self.kiwoom.GetChejanData(907))
@@ -293,16 +296,17 @@ class MyWindow(QMainWindow):
             # 봉손절: 마지막 거래만 확인
             if bongFlag:
                 self.list.tail.bongCount += 1
-                if bongPlus > 0:
-                    self.list.tail.bongP += 1
-                elif bongPlus < 0:
-                    self.list.tail.bongP -= 1
+                # if bongPlus > 0:
+                #     self.list.tail.bongP += 1
+                # elif bongPlus < 0:
+                #     self.list.tail.bongP -= 1
                 if self.list.tail.type == type_buy:
-                    if self.list.tail.bongP == -1 and self.list.tail.bongCount == 2:
+                    if bongP < 0 and self.list.tail.bongCount == 2:
                         # Option3: 매수진입 직후 마이너스 봉일때 바로 팜 (진입한 봉은 무시)
                         try:
                             if self.debug_check_fun() is False:
                                 self.stock_sale_modify(self.list.tail.id)
+                                time.sleep(1)
                                 self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
                                     bongP) + ',봉손절 ' + str(self.list.tail.tran_time) + '에 $' + str(
                                     self.list.tail.price) + '에 매수 후 $' + str(price) + '에 매도\n')
@@ -314,11 +318,12 @@ class MyWindow(QMainWindow):
                             pass
                         self.list.remove_elem(self.list.tail)
                 else:
-                    if self.list.tail.bongP == 1 and self.list.tail.bongCount == 2:
+                    if bongP > 0 and self.list.tail.bongCount == 2:
                         # Option3_reverse: 매도진입 직후 플러스 봉일때 바로 팜 (진입한 봉은 무시)
                         try:
                             if self.debug_check_fun() is False:
                                 self.stock_buy_modify(self.list.tail.id)
+                                time.sleep(1)
                                 self.log_file.write(str(sale_time) + ',' + str(bongFlag) + ',' + str(price) + ',' + str(
                                     bongP) + ',봉손절 ' + str(self.list.tail.tran_time) + '에 $' + str(
                                     self.list.tail.price) + '에 매도 후 $' + str(price) + '에 매수\n')
@@ -344,6 +349,7 @@ class MyWindow(QMainWindow):
                         if self.debug_check_fun() is False:
                             print('매수 진입', price)
                             self.stock_buy_order()
+                            time.sleep(1)
                         else:
                             self.get_transaction_data_debug(price, type_buy, sale_time, bongP)
                 elif bongP >= 1 and bongPlus < 0:
@@ -352,6 +358,7 @@ class MyWindow(QMainWindow):
                         if self.debug_check_fun() is False:
                             print('매도 진입', price)
                             self.stock_sale_order()
+                            time.sleep(1)
                         else:
                             self.get_transaction_data_debug(price, type_sell, sale_time, bongP)
                 if bongPlus > 0:
@@ -734,7 +741,7 @@ class Transaction:
         self.tran_time = tran_timeIn
         self.id = idIn
         # 초기 세팅
-        self.bongP = 0
+        # self.bongP = 0
         self.bongCount = 0
         # Doubly Linked List라서 prev & next 존재
         self.prev = None
@@ -779,7 +786,8 @@ class DLinkedList:
         while curr.next:
             curr = curr.next
         curr.next = newNode
-        self.tail = curr.next
+        newNode.prev = curr
+        self.tail = newNode
 
 
 if __name__ == "__main__":
