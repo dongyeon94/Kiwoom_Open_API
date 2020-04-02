@@ -759,6 +759,11 @@ class DLinkedList:
             if node is self.tail:
                 self.tail = self.tail.prev
                 self.tail.next = None
+            elif node is self.head:
+                self.head = node.next
+                node.next.prev = None
+                node.next = None
+                node = None
             else:
                 node.prev.next = node.next
                 node.next.prev = node.prev
