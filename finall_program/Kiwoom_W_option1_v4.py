@@ -118,9 +118,9 @@ class MyWindow(QMainWindow):
         self.option_warning.resize(300, 500)
 
         # 시작
-        module_start = QPushButton('거래 시작', self)
-        module_start.move(200, 500)
-        module_start.clicked.connect(self.data_loading)
+        self.module_start = QPushButton('거래 시작', self)
+        self.module_start.move(200, 500)
+        self.module_start.clicked.connect(self.data_loading)
 
         # 로그인
         login_btn = QPushButton("로그인", self)
@@ -483,6 +483,7 @@ class MyWindow(QMainWindow):
             print(res)
             if res == 0:
                 print('요청성공')
+                self.module_start.setDisabled(True)
             else:
                 print('요청 실패')
             self.kiwoom.OnReceiveRealData.connect(self.realData)
