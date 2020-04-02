@@ -339,19 +339,19 @@ class MyWindow(QMainWindow):
                     bongP = 0
             else:
                 if bongP <= -1 and bongPlus > 0:
-                    if option[0] == '1' and (self.list.size == 0 or self.list.head.type == type_buy):
-                        transaction_flag = True
-                        if self.debug_check_fun() is False:
-                            print('매수 진입', price)
-                            self.stock_buy_order()
-                        else:
-                            self.get_transaction_data_debug(price, type_buy, sale_time, bongP)
-                elif bongP >= 1 and bongPlus < 0:
-                    if option[1] == '1' and (self.list.size == 0 or self.list.head.type == type_sell):
+                    if option[0] == '1' and (self.list.size == 0 or self.list.head.type == type_sell):
                         transaction_flag = True
                         if self.debug_check_fun() is False:
                             print('매도 진입', price)
                             self.stock_sale_order()
+                        else:
+                            self.get_transaction_data_debug(price, type_buy, sale_time, bongP)
+                elif bongP >= 1 and bongPlus < 0:
+                    if option[1] == '1' and (self.list.size == 0 or self.list.head.type == type_buy):
+                        transaction_flag = True
+                        if self.debug_check_fun() is False:
+                            print('매수 진입', price)
+                            self.stock_buy_order()
                         else:
                             self.get_transaction_data_debug(price, type_sell, sale_time, bongP)
                 if bongPlus > 0:
@@ -757,8 +757,8 @@ class DLinkedList:
             self.tail = None
         else:
             if node is self.tail:
-                self.tail.next = None
                 self.tail = self.tail.prev
+                self.tail.next = None
             else:
                 node.prev.next = node.next
                 node.next.prev = node.prev
