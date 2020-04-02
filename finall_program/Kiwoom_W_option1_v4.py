@@ -15,9 +15,6 @@ sale_time = None
 bong_start = None
 bong_end = None
 
-# Head for Doubly LinkedList(매수한 선물 리스트)
-head = None
-
 # 진입 타입
 type_buy = 2  # 매수 진입
 type_sell = 1  # 매도 진입
@@ -163,48 +160,36 @@ class MyWindow(QMainWindow):
         self.list = DLinkedList()
 
     def test1(self):
-        print('test22')
-        print('매수중')
+        print('test')
 
-        self.kiwoom.SetInputValue('계좌번호', "7003305172")
-        self.kiwoom.SetInputValue("비밀번호", "0000")
-        self.kiwoom.SetInputValue('비밀번호입력매체', "00")  # 무조건 00
-        self.kiwoom.SetInputValue('종목코드', "CLK20")
-        self.kiwoom.SetInputValue("매도수구분", "1")  # 1:매도, 2:매수
-        self.kiwoom.SetInputValue("해외주문유형", "5")  # 1:시장가, 2:지정가, 3:STOP, 4:StopLimit, 5:OCO, 6:IF DONE
-        self.kiwoom.SetInputValue("주문수량", "1")
-        self.kiwoom.SetInputValue("주문표시가격", "0")
-        self.kiwoom.SetInputValue("STOP구분", "1")  # 0:선택안함, 1:선택
-        self.kiwoom.SetInputValue("STOP표시가격", "20.10")
-        self.kiwoom.SetInputValue("LIMIT구분", "1")  # 0:선택안함, 1:선택
-        self.kiwoom.SetInputValue("LIMIT표시가격", "20.20")
-        self.kiwoom.SetInputValue("해외주문조건구분", "0")  # 0:당일, 6:GTD
-        self.kiwoom.SetInputValue("주문조건종료일자", "0")  # 0:당일, 6:GTD
-        self.kiwoom.SetInputValue("통신주문구분", "AP")  # 무조건 "AP" 입력
-
-        data = self.kiwoom.CommRqData('주식주문', "opw10008", "", '0101')
-        print(data)
 
     def get_transaction_data(self, sGubun, nItemCnt):
-        global transaction_flag, type_buy, type_sell, numBought, head
+        global transaction_flag, type_buy, type_sell, numBought
         # 예약 받아옴
         if sGubun == '0':
-            price = float(self.kiwoom.GetChejanData(13330))
             tran = int(self.kiwoom.GetChejanData(905))
-            if price != 0 and tran != 3:
-                # 예약과 시가를 구분
-                transaction_id = self.kiwoom.GetChejanData(9203)[6:]
-                type_tran = int(self.kiwoom.GetChejanData(907))
-                sale_time = int(self.kiwoom.GetChejanData(908)[3:-2])
-                if type_tran == type_buy:
-                    type_tran = type_sell
-                    # 매도 후 낮아진 가격에 매수
-                    price = round(price + 0.01 * int(self.get_gain.currentText()), 2)
+            stop_price = float(self.kiwoom.GetChejanData(13333))
+            type_tran = int(self.kiwoom.GetChejanData(907))
+            if stop_price != 0:
+                if tran != 3:
+                    # 예약과 시가를 구분
+                    if type_tran == type_buy:
+                        # 매도 후 낮아진 가격에 매수
+                        type_tran = type_sell
+                        price = round(stop_price - 0.01 * (int(self.get_loss.currentText())), 2)
+                    else:
+                        # 매수 후 높아진 가격에 매도
+                        type_tran = type_buy
+                        price = round(stop_price + 0.01 * (int(self.get_loss.currentText())), 2)
+                    transaction_id = self.kiwoom.GetChejanData(9203)[6:]
+                    sale_time = int(self.kiwoom.GetChejanData(908)[3:-2])
+                    self.list.ll_append(Transaction(type_tran, price, sale_time, transaction_id))
                 else:
-                    type_tran = type_buy
-                    # 매수 후 높아진 가격에 매도
-                    price = round(price - 0.03 * int(self.get_gain.currentText()), 2)
-                self.list.ll_append(Transaction(type_tran, price, sale_time, transaction_id))
+                    #봉손절
+                    if type_tran == type_sell:
+                        self.stock_sale_order()
+                    else:
+                        self.stock_buy_order()
         # 매수 2 매도 1
         # 거래 체결된 경우
         if sGubun == '1':
@@ -232,7 +217,7 @@ class MyWindow(QMainWindow):
                 price = float(self.kiwoom.GetChejanData(910))
                 sale_time = int(self.kiwoom.GetChejanData(908))
                 if tran == 21:
-                    curr = head
+                    curr = self.list.head
                     while curr is not None:
                         if curr.id == transaction_id:
                             #손절 or익절 (예약 체결됨)
@@ -249,13 +234,13 @@ class MyWindow(QMainWindow):
                             break
                         curr = curr.next
 
-                if tran == 23:
-                    # 봉손절 case: 예약 취소 완료, 시가로 팔기
-                    type_tran = int(self.kiwoom.GetChejanData(907))
-                    if type_tran == type_sell:
-                        self.stock_sale_order()
-                    else:
-                        self.stock_buy_order()
+                # if tran == 23:
+                #     # 봉손절 case: 예약 취소 완료, 시가로 팔기
+                #     type_tran = int(self.kiwoom.GetChejanData(907))
+                #     if type_tran == type_sell:
+                #         self.stock_sale_order()
+                #     else:
+                #         self.stock_buy_order()
 
     def get_transaction_data_debug(self, price, typeIn, sale_time, bongP):
         global transaction_flag, type_buy
@@ -285,7 +270,7 @@ class MyWindow(QMainWindow):
             self.debug_file_name = fname[0]
 
     def run(self, price, bongPlus, tickFlag, bongFlag, sale_time, option):
-        global head, type_sell, type_buy, bongP, lastTickPrice, total, transaction_flag
+        global type_sell, type_buy, bongP, lastTickPrice, total, transaction_flag
 
         if self.debug_check_fun() is False and self.log_file is None:
             self.log_file = open('log' + COM_DATE + '_거래.csv', mode='wt', encoding='utf-8')
@@ -353,16 +338,16 @@ class MyWindow(QMainWindow):
                 else:
                     bongP = 0
             else:
-                if bongP <= -2 and bongPlus > 0:
-                    if option[0] == '1' and (self.list.size == 0 or self.list.head.type == type_buy):
+                if bongP <= -1 and bongPlus > 0:
+                    if option[0] == '1' and (self.list.size == 0 or self.list.head.type == type_sell):
                         transaction_flag = True
                         if self.debug_check_fun() is False:
                             print('매도 진입', price)
                             self.stock_sale_order()
                         else:
                             self.get_transaction_data_debug(price, type_buy, sale_time, bongP)
-                elif bongP >= 2 and bongPlus < 0:
-                    if option[1] == '1' and (self.list.size == 0 or self.list.head.type == type_sell):
+                elif bongP >= 1 and bongPlus < 0:
+                    if option[1] == '1' and (self.list.size == 0 or self.list.head.type == type_buy):
                         transaction_flag = True
                         if self.debug_check_fun() is False:
                             print('매수 진입', price)
@@ -412,9 +397,9 @@ class MyWindow(QMainWindow):
         else:
             self.kiwoom.SetInputValue("주문표시가격", "0")
             self.kiwoom.SetInputValue("STOP구분", "1")  # 0:선택안함, 1:선택
-            self.kiwoom.SetInputValue("STOP표시가격", str(round(price + 0.01 * int(self.get_loss.currentText()),2)))
+            self.kiwoom.SetInputValue("STOP표시가격", str(round(price + 0.01 * int(self.get_loss.currentText()), 2)))
             self.kiwoom.SetInputValue("LIMIT구분", "1")  # 0:선택안함, 1:선택
-            self.kiwoom.SetInputValue("LIMIT표시가격", str(round(price - 0.01 * int(self.get_gain.currentText()),2)))
+            self.kiwoom.SetInputValue("LIMIT표시가격", str(round(price - 0.01 * int(self.get_gain.currentText()), 2)))
             self.kiwoom.SetInputValue("해외주문조건구분", "0")  # 0:당일, 6:GTD
             self.kiwoom.SetInputValue("주문조건종료일자", "0")  # 0:당일, 6:GTD
             self.kiwoom.SetInputValue("통신주문구분", "AP")  # 무조건 "AP" 입력
@@ -545,12 +530,12 @@ class MyWindow(QMainWindow):
                     bongPlus = 0
                 else:
                     bongPlus = bong_end - bong_start
-                    if round(abs(bongPlus), 2) <= 0.01:
-                        bongPlus = 0
-                        # 0.01인경우 무시
-                        bong_start = abs(float(str(current_data)))
-                    else:
-                        bong_start = abs(float(str(current_data)))
+                    # if round(abs(bongPlus), 2) <= 0.01:
+                    #     bongPlus = 0
+                    #     # 0.01인경우 무시
+                    #     bong_start = abs(float(str(current_data)))
+                    # else:
+                    bong_start = abs(float(str(current_data)))
                 bongFlag = True
             else:
                 bong_end = abs(float(str(current_data)))
