@@ -353,18 +353,16 @@ class MyWindow(QMainWindow):
                 else:
                     bongP = 0
             else:
-                if option[0] == '1' and (self.list.size == 0 or self.list.head.type == type_buy):
-                    if bongP <= -3 and bongPlus > 0:
-                        # 매수진입: bong 3번 내려갔다가 한번 오르면 삼
+                if bongP <= -2 and bongPlus > 0:
+                    if option[0] == '1' and (self.list.size == 0 or self.list.head.type == type_buy):
                         transaction_flag = True
                         if self.debug_check_fun() is False:
                             print('매도 진입', price)
                             self.stock_sale_order()
                         else:
                             self.get_transaction_data_debug(price, type_buy, sale_time, bongP)
-                elif option[1] == '1' and (self.list.size == 0 or self.list.head.type == type_sell):
-                    if bongP >= 3 and bongPlus < 0:
-                        # 매도진입: bong 3번 올랐다가 한번 내리면 삼
+                elif bongP >= 2 and bongPlus < 0:
+                    if option[1] == '1' and (self.list.size == 0 or self.list.head.type == type_sell):
                         transaction_flag = True
                         if self.debug_check_fun() is False:
                             print('매수 진입', price)
@@ -414,9 +412,9 @@ class MyWindow(QMainWindow):
         else:
             self.kiwoom.SetInputValue("주문표시가격", "0")
             self.kiwoom.SetInputValue("STOP구분", "1")  # 0:선택안함, 1:선택
-            self.kiwoom.SetInputValue("STOP표시가격", str(round(price + 0.01 * int(self.get_loss.currentText())), 2))
+            self.kiwoom.SetInputValue("STOP표시가격", str(round(price + 0.01 * int(self.get_loss.currentText()),2)))
             self.kiwoom.SetInputValue("LIMIT구분", "1")  # 0:선택안함, 1:선택
-            self.kiwoom.SetInputValue("LIMIT표시가격", str(round(price - 0.01 * int(self.get_gain.currentText())), 2))
+            self.kiwoom.SetInputValue("LIMIT표시가격", str(round(price - 0.01 * int(self.get_gain.currentText()),2)))
             self.kiwoom.SetInputValue("해외주문조건구분", "0")  # 0:당일, 6:GTD
             self.kiwoom.SetInputValue("주문조건종료일자", "0")  # 0:당일, 6:GTD
             self.kiwoom.SetInputValue("통신주문구분", "AP")  # 무조건 "AP" 입력
@@ -448,9 +446,9 @@ class MyWindow(QMainWindow):
         else:
             self.kiwoom.SetInputValue("주문표시가격", "0")
             self.kiwoom.SetInputValue("STOP구분", "1")  # 0:선택안함, 1:선택
-            self.kiwoom.SetInputValue("STOP표시가격", str(round(price - 0.01 * int(self.get_loss.currentText())), 2))
+            self.kiwoom.SetInputValue("STOP표시가격", str(round(price - 0.01 * int(self.get_loss.currentText()), 2)))
             self.kiwoom.SetInputValue("LIMIT구분", "1")  # 0:선택안함, 1:선택
-            self.kiwoom.SetInputValue("LIMIT표시가격", str(round(price + 0.01 * int(self.get_gain.currentText())), 2))
+            self.kiwoom.SetInputValue("LIMIT표시가격", str(round(price + 0.01 * int(self.get_gain.currentText()), 2)))
             self.kiwoom.SetInputValue("해외주문조건구분", "0")  # 0:당일, 6:GTD
             self.kiwoom.SetInputValue("주문조건종료일자", "0")  # 0:당일, 6:GTD
             self.kiwoom.SetInputValue("통신주문구분", "AP")  # 무조건 "AP" 입력
@@ -481,7 +479,7 @@ class MyWindow(QMainWindow):
 
         if self.checkbox() == '':
             # self.option_warning.showMessage('옵션을 선택해주세요')
-            self.option_warning.about(self, '프로그램 경고', '시작 전 옵셥을 선택해주세요')
+            self.option_warning.about(self, '프로그램 경고', '시작 전 옵션을 선택해주세요')
             # show('옵션을 선택해주세요')
             return
 
