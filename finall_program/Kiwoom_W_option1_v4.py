@@ -174,11 +174,11 @@ class MyWindow(QMainWindow):
                 if tran != 3:
                     # 예약과 시가를 구분
                     if type_tran == type_buy:
-                        # 매도 후 낮아진 가격에 매수
+                        # 매도 후 낮아진 가격에 매수 예약
                         type_tran = type_sell
                         price = round(stop_price - 0.01 * (int(self.get_loss.currentText())), 2)
                     else:
-                        # 매수 후 높아진 가격에 매도
+                        # 매수 후 높아진 가격에 매도 예약
                         type_tran = type_buy
                         price = round(stop_price + 0.01 * (int(self.get_loss.currentText())), 2)
                     transaction_id = self.kiwoom.GetChejanData(9203)[6:]
@@ -577,10 +577,12 @@ class MyWindow(QMainWindow):
                 if sScrNo=='0101':
                     # 매도중
                     print('매도 시도했으나 실패 시장가 매도')
+                    self.log_file.write('매도 시도했으나 실패, 시장가 매도\n')
                     self.stock_sale_order()
                 if sScrNo=='0102':
                     # 매수
                     print('매수 시도했으나 실패 시장가 매수')
+                    self.log_file.write('매수 시도했으나 실패, 시장가 매수\n')
                     self.stock_buy_order()
 
         if sRQName == "매도미체결":
