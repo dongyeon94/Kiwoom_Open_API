@@ -343,7 +343,7 @@ class MyWindow(QMainWindow):
                 else:
                     bongP = 0
             else:
-                if bongP <= -1 and bongPlus > 0:
+                if bongP <= -2 and bongPlus > 0:
                     if option[0] == '1' and (self.list.size == 0 or self.list.head.type == type_buy):
                         transaction_flag = True
                         if self.debug_check_fun() is False:
@@ -352,7 +352,7 @@ class MyWindow(QMainWindow):
                             time.sleep(1)
                         else:
                             self.get_transaction_data_debug(price, type_buy, sale_time, bongP)
-                elif bongP >= 1 and bongPlus < 0:
+                elif bongP >= 2 and bongPlus < 0:
                     if option[1] == '1' and (self.list.size == 0 or self.list.head.type == type_sell):
                         transaction_flag = True
                         if self.debug_check_fun() is False:
@@ -411,7 +411,7 @@ class MyWindow(QMainWindow):
             self.kiwoom.SetInputValue("주문조건종료일자", "0")  # 0:당일, 6:GTD
             self.kiwoom.SetInputValue("통신주문구분", "AP")  # 무조건 "AP" 입력
 
-        data = self.kiwoom.CommRqData('주식주문', "opw10008", "", '0101')
+        data = self.kiwoom.CommRqData('주식주문', "opw10008", "", '0102')
 
         print(data)
 
@@ -567,33 +567,22 @@ class MyWindow(QMainWindow):
         if self.debug_check_fun() is False:
             self.kiwoom.DisconnectRealData('opt10011')
 
-    # # 매도 미체결 취소 조회
-    # def stock_buy_wait(self):
-    #     print('미체결 조회중')
-    #     self.kiwoom.SetInputValue('계좌번호', self.account.text())
-    #     self.kiwoom.SetInputValue("비밀번호", self.password.text())
-    #     self.kiwoom.SetInputValue('비밀번호입력매체', "00")  # 무조건 00
-    #     self.kiwoom.SetInputValue('종목코드', self.stoct_code.text())
-    #     self.kiwoom.SetInputValue('통화코드', "USD")
-    #     self.kiwoom.SetInputValue('매도수구분', "1")
-    #     res = self.kiwoom.CommRqData("매도미체결", "opw30001", "", "opw30001")
-    #     time.sleep(1)
-    #
-    # # 매수 미체결 조회
-    # def stock_sale_wait(self):
-    #     print('미체결 조회중')
-    #     self.kiwoom.SetInputValue('계좌번호', self.account.text())
-    #     self.kiwoom.SetInputValue("비밀번호", self.password.text())
-    #     self.kiwoom.SetInputValue('비밀번호입력매체', "00")  # 무조건 00
-    #     self.kiwoom.SetInputValue('종목코드', self.stoct_code.text())
-    #     self.kiwoom.SetInputValue('통화코드', "USD")
-    #     self.kiwoom.SetInputValue('매도수구분', "2")
-    #     res = self.kiwoom.CommRqData("매수미체결", "opw30001", "", "opw30001")
-    #     time.sleep(1)
 
     # 데이터 수신중
     def receive_trdata(self, sScrNo, sRQName, sTrCode, sRecordName, sPreNext):
         # print(sRQName)
+        if sRQName=="주식주문":
+            num = self.kiwoom.GetCommData(sTrCode, sRQName, 0, "주문번호")
+            if num=='':
+                if sScrNo=='0101':
+                    # 매도중
+                    print('매도 시도했으나 실패 시장가 매도')
+                    self.stock_sale_order()
+                if sScrNo=='0102':
+                    # 매수
+                    print('매수 시도했으나 실패 시장가 매수')
+                    self.stock_buy_order()
+
         if sRQName == "매도미체결":
             # dataCount = self.kiwoom.GetRepeatCnt(sTrCode, sRQName)
             # dataCount2 = self.kiwoom.GetChejanData(9203)
@@ -796,3 +785,28 @@ if __name__ == "__main__":
     myWindow = MyWindow()
     myWindow.show()
     app.exec_()
+
+
+  # # 매도 미체결 취소 조회
+    # def stock_buy_wait(self):
+    #     print('미체결 조회중')
+    #     self.kiwoom.SetInputValue('계좌번호', self.account.text())
+    #     self.kiwoom.SetInputValue("비밀번호", self.password.text())
+    #     self.kiwoom.SetInputValue('비밀번호입력매체', "00")  # 무조건 00
+    #     self.kiwoom.SetInputValue('종목코드', self.stoct_code.text())
+    #     self.kiwoom.SetInputValue('통화코드', "USD")
+    #     self.kiwoom.SetInputValue('매도수구분', "1")
+    #     res = self.kiwoom.CommRqData("매도미체결", "opw30001", "", "opw30001")
+    #     time.sleep(1)
+    #
+    # # 매수 미체결 조회
+    # def stock_sale_wait(self):
+    #     print('미체결 조회중')
+    #     self.kiwoom.SetInputValue('계좌번호', self.account.text())
+    #     self.kiwoom.SetInputValue("비밀번호", self.password.text())
+    #     self.kiwoom.SetInputValue('비밀번호입력매체', "00")  # 무조건 00
+    #     self.kiwoom.SetInputValue('종목코드', self.stoct_code.text())
+    #     self.kiwoom.SetInputValue('통화코드', "USD")
+    #     self.kiwoom.SetInputValue('매도수구분', "2")
+    #     res = self.kiwoom.CommRqData("매수미체결", "opw30001", "", "opw30001")
+    #     time.sleep(1)
